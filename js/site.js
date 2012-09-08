@@ -24,23 +24,14 @@ var handleHashChange = function(){
 					$(".active").addClass('loaded'); 
 				},1000);
 			});
-
 	}
 
 };
 $('body').addClass('page-loaded');
 $(function(){
 		$('body').removeClass('switching');
-		/* Mozilla an IE Doesn't do Sizing */
-		if ($.browser.mozilla || $.browser.msie) {
-			$('#resume iframe').height($(window).height()*0.80);
-			$(window).resize(function() {
-				$('#resume iframe').height($(window).height()*0.80);
-			});
-		}
 		
-		if($.browser.msie)
-		{
+		if($.browser.msie){
 			handleHashChange();
 		} else {
 			//setup the views as hidden
