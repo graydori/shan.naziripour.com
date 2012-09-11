@@ -153,7 +153,7 @@
             </div>
             <div class="span3">
               <div class="thumbnail"> <img src="img/portfolio_1.png" alt="anngoldberg.com Screenshot"/>
-                <p>Want to see this site? <a href="anngoldberg.com">Ann Goldberg</a></p>
+                <p>Want to see this site? <a href="http://www.anngoldberg.com">Ann Goldberg</a></p>
               </div>
             </div>
             <div class="span3">
@@ -213,7 +213,6 @@
 <script src="js/overthrow.js" type="text/javascript"></script> 
 <script src="js/site.js" type="text/javascript"></script> 
 <script type="text/javascript">
-
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-34564934-1']);
   _gaq.push(['_setDomainName', 'naziripour.com']);
@@ -224,7 +223,11 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
+  $(document).ready(function(){
+	$('a').click(function(){
+		_gaq.push(['_trackEvent', 'Link', 'Click', $(this).attr('href')]);
+	});
+  });
 </script>
 </body>
 </html>
