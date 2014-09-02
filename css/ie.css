@@ -1,10 +1,2 @@
 /*Stylesheet specific to IE because 
 CSS3 Transformations are not supported*/
-.view
-{
-	display:none;
-}
-.active
-{
-	display:block;
-}
