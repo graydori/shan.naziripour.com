@@ -17,26 +17,14 @@ h4,
 h5 {
 	font-family: 'Pacifico', cursive;
 }
+h3 small {
+	color:#ccc;
+}
 .view {
-	z-index: 1;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 0;
-	overflow: hidden;
-	width: 100%;
-	transition: all 0.5s ease-in;
-	-webkit-transform: translateX(-200%) scale(2);
-	-moz-transform: translateX(-200%) scale(2);
-	transform: translateX(-200%) scale(2);
+	display:none;
 }
 .view:target {
-	border:0;
-	height: 100%;
-	position: relative;
-	-webkit-transform: translateX(0);
-	-moz-transform: translateX(0);
-	transform: translateX(0);
+	display:block;
 	background: rgba(0, 0, 0, 0.5);
 	margin-bottom: 50px;
 	box-shadow: 0px 0px 12px 30px rgba(0, 0, 0, 0.3), 0px 0px 300px 2000px rgba(0, 0, 0, 0.3);
