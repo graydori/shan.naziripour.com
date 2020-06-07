@@ -55,9 +55,10 @@ dialog:target {
   display: block;
 }
 
-dialog:target ~ header {
+dialog:target ~ main {
   display: none;
 }
+
 main nav {
   min-height: 100vh;
   writing-mode: vertical-lr;
