@@ -1,0 +1,343 @@
+html {
+  background: #fff; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #e2e2e2,
+    #fff
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #e2e2e2,
+    #fff
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  height: 100vh;
+}
+
+h1, footer {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 span {
+  align-self: center;
+  margin-bottom: 0;
+}
+
+h1 b {
+  display: inline-block;
+}
+
+h1 b:first-child {
+  animation: 208ms 1.82s forwards break-left;
+}
+
+h1 b:last-child {
+  animation: 208ms 1.82s forwards break-right;
+}
+
+@keyframes break-left {
+  100% {
+    color: #000;
+    transform: translateY(14.6rem) rotate(45deg);
+  }
+}
+
+@keyframes break-right {
+  100% {
+    color: #000;
+    transform: translate(1.3rem, 16rem) rotate(-45deg);
+  }
+}
+
+h1 small {
+  font-family: "Yellowtail", cursive;
+  display: block;
+}
+
+.phone {
+  width: 18rem;
+  height: 25rem;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 3px solid black;
+  border-radius: 14px;
+  box-shadow: black -5px 5px, black -10px 10px,
+    rgba(0, 0, 0, 0.15) 10px -7px 20px;
+  display: flex;
+  flex-direction: column;
+  transition: all 200ms ease-in-out 0s;
+  transform-origin: 50% 50%;
+  justify-content: flex-start;
+  position: relative;
+  transform: translateY(calc(50vh - 50%)) rotate3d(1, 1, -3, 45deg);
+  animation: 2000ms cubic-bezier(1, -0.3, 0.9, 1.1) 0ms 1 normal forwards
+    running slam;
+  overflow: hidden;
+}
+
+.phone::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 10px;
+  background: black;
+  border-radius: 0 0 14px 14px;
+  left: 0;
+  transform: translateX(50%);
+}
+
+@keyframes slam {
+  0% {
+    box-shadow: black -5px 5px, black -10px 10px,
+      rgba(0, 0, 0, 0.15) 0px 50vh 100px;
+    transform: translateY(-200%) rotate3d(1, 1, -3, 45deg);
+  }
+  100% {
+    box-shadow: black -5px 5px, black -10px 10px,
+      rgba(0, 0, 0, 0.15) 10px -7px 20px, rgba(0, 0, 0, 0.2) 0px 1px 20px 0px;
+    transform: translateY(calc(50vh - 50%)) rotate3d(1, 1, -3, 45deg);
+  }
+}
+
+.phone-content {
+  height: 100%;
+  overflow-y: auto;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  width: 100%;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  animation: 1s 0.5s forwards show-in;
+}
+
+@keyframes show-in {
+  0% {
+    height: 100%;
+  }
+  100% {
+    opacity: 1;
+    height: 100%;
+  }
+}
+
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul {
+  flex-direction: column;
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+ul > li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.bubble {
+  display: inline-block;
+  border-radius: 15px;
+  padding: 10px;
+  margin: 0 20px;
+  position: relative;
+  max-width: 70%;
+  border: 0;
+  z-index: 0;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.bubble--you {
+  align-self: flex-start;
+  color: black;
+  background: rgb(229, 229, 234);
+}
+
+.bubble--you:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  left: -7px;
+  height: 20px;
+  border-left: 20px solid rgb(229, 229, 234);
+  border-bottom-right-radius: 16px 14px;
+  -webkit-transform: translate(0, -2px);
+}
+
+.bubble--you:after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: -2px;
+  left: 18px;
+  width: 12px;
+  height: 20px;
+  background: white;
+  border-bottom-right-radius: 10px;
+  -webkit-transform: translate(-30px, -2px);
+}
+
+.bubble--me {
+  justify-content: flex-end;
+  color: white;
+  background: rgb(63, 144, 241);
+}
+
+button.bubble--me {
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+button.bubble--me:hover,
+button.bubble--me:active {
+  box-shadow: rgba(0, 0, 0, 0.3) 0 3px 20px;
+}
+
+span.bubble--me:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  right: -7px;
+  height: 20px;
+  border-right: 20px solid rgb(63, 144, 241);
+  border-bottom-left-radius: 16px 14px;
+  -webkit-transform: translate(0, -2px);
+}
+
+span.bubble--me:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: -2px;
+  right: -42px;
+  width: 12px;
+  height: 20px;
+  background: white;
+  border-bottom-left-radius: 10px;
+  -webkit-transform: translate(-30px, -2px);
+}
+
+
+.dot-flashing-wrapper {
+  width: 40px;
+  position: relative;
+  text-align: center;
+  animation: hide-box 0.5s 1s forwards;
+}
+
+.dot-flashing {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #a9a9a9;
+  color: #a9a9a9;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+  margin: 0 auto;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-flashing::before {
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #a9a9a9;
+  color: #a9a9a9;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #a9a9a9;
+  color: #a9a9a9;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #a9a9a9;
+  }
+  50%,
+  100% {
+    background-color: #bebebe;
+  }
+}
+
+/* Form */
+form {
+  border-radius: 15px;
+  border: 1px solid rgb(229,229,234);;
+  display: flex;
+  max-width: calc(100% - 30px);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  padding: 5px;
+}
+
+form textarea {
+  border: 0;
+  outline: 0;
+  flex-grow: 1;
+  height: 1em;
+  min-height: 1em;
+  max-height: 4em;
+  resize:vertical;
+}
+
+form button {
+  border-radius: 100%;
+  border: 0;
+  padding: 0 2px;
+  color: white;
+  background: rgb(63,144,241);
+  align-self: flex-end;
+  justify-content: flex-end;
+}
+
+form button img {
+  height: 1.2em;
+  transform: scale(1.1,0.9) translateY(2px);
+}
