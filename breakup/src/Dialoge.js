@@ -1,64 +1,26 @@
 import React from 'react';
 import Bubble from './Bubble';
 
-class LoadingTimer extends React.Component {
-  state = { isLoading: true };
+export default class Dialoge extends React.Component {
+  state = { isLoading: true, showContent: false };
 
   componentDidMount() {
-    this.timer = setTimeout(() => this.setState({ isLoading: false }), 4000);
+    this.timer1 = setTimeout(() => this.setState({ isLoading: false }), 4000);
+    this.timer2 = setTimeout(() => this.setState({ showContent: true }), 5000);
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer);
-  }
-}
-
-export class Options extends React.Component {
-  onSelect(selection) {
-    this.setState({ selection });
-    switch (selection) {
-      case 'reality':
-        this.props.onNeg();
-        break;
-      case 'pos':
-        this.props.onPos();
-        break;
-      case 'neg':
-        this.props.onNeg();
-        break;
-      default:
-    }
-  }
-  render() {
-    return (<ul>
-    <li>
-      <button className="bubble bubble--me" onClick={this.props.onReality} >
-        {this.props.reality}
-      </button>
-    </li>
-    <li>
-      <button className="bubble bubble--me" onClick={this.props.onNeg} >
-        {this.props.neg}
-      </button>
-    </li>
-    <li>
-      <button className="bubble bubble--me" onClick={this.props.onPos} >
-        {this.props.pos}
-      </button>
-    </li>
-    </ul>);
+    clearTimeout(this.timer1);
+    clearTimeout(this.timer2);
   }
 
-}
-
-export default class Dialoge extends LoadingTimer {
   render() {
     return (
       <li>
         <Bubble isLoading={this.state.isLoading}>{this.props.text}</Bubble>
-        <div className={this.state.isLoading? 'hidden': 'show'}>
-          {this.props.children}
-        </div>
+        {
+          this.state.showContent? this.props.children : ''
+        }
       </li>
     );
   }
