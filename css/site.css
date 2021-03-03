@@ -1,52 +1,106 @@
 body {
-  background: #a0cece;
-  font-family: "Roboto", sans-serif;
+  background: #ed6a5a;
+  font-family: "Work Sans", sans-serif;
 }
 
 header {
-  background-image: url(../img/shan.naziripour.png);
-  background-position: bottom center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 450px;
   margin: 0 auto;
   font-size: 2em;
+  padding: 0 1rem;
 }
 
-header p span {
-  background-color: rgba(255, 255, 255, 0.4);
-  background-image: url(../img/rough-diagonal.png);
+header p {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
-header p em {
-  background: #eee;
-  padding: 5px 0;
+header p:first-of-type::before {
+  content: " ";
+  display: block;
+  border: transparent 1rem solid;
+  border-bottom-color: #fff;
+  border-bottom-width: 2rem;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -2.4rem;
+  right: 5rem;
+}
+
+header p::after {
+  content: " ";
+  border: #fff 0.51rem solid;
+  border-left-color: transparent;
+  border-radius: 50%;
+  position: absolute;
+  right: -1rem;
+  bottom: -1.6rem;
+  display: block;
+  height: 3rem;
+  width: 3rem;
+}
+
+header p:last-child::after {
+  display: none;
+}
+
+header p:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+header p:nth-child(odd) {
+  transform: rotate(-1deg);
 }
 
 h1 {
   font-size: 4em;
+  background: url(../img/shan.naziripour.png) no-repeat bottom right;
+  background-size: contain;
+  margin: 0;
+  animation: slide-in 500ms ease-out forwards;
 }
+
+@keyframes slide-in {
+  0% {
+    background-position-y: 300px;
+  }
+  100% {
+    background-position-y: bottom;
+  }
+}
+
 h1 small {
   color: #fff;
   display: block;
 }
 
-.h1,
-h1,
+h1 {
+  font-family: "Knewave", cursive;
+}
+
 h2,
 h3,
 h4,
 h5 {
-  font-family: "Knewave", cursive;
+  font-family: "Concert One", cursive;
+  text-transform: uppercase;
+}
+
+h3,
+h4 {
+  border-top: 5px solid;
 }
 
 dialog {
   display: none;
   width: 100%;
-  background: #fff275;
+  background: #fff;
   min-height: 100vh;
   border: 0;
 }
@@ -60,52 +114,194 @@ dialog:target ~ main {
 }
 
 main nav {
-  min-height: 100vh;
-  writing-mode: vertical-lr;
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: 0 auto;
+  margin: 0 1rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-gap: 0.5rem;
+  align-items: flex-start;
+  grid-auto-columns: minmax(260px, 1fr);
 }
 
 main nav a {
+  border-top: 5px solid;
   color: #fff;
-  display: block;
-  padding: 20px 5px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 main nav a em {
-	font-family: "Knewave", cursive;
-	font-size: 2.5em;
+  font-size: 2rem;
+  font-family: "Concert One", cursive;
   font-style: normal;
-  padding-bottom: 10px;
+  display: block;
+  position: relative;
 }
 
-main nav a i {
+main nav a em::after {
+  content: "↗️";
   display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
-main nav a[href="#me"] {
-  background: #ed6a5a;
+main nav a[href="#me"] em::after {
+  content: "👨🏽‍💻";
 }
-main nav a[href="#art"] {
-  background: #f38816;
+main nav a[href="#art"] em::after {
+  content: "🎨";
 }
-main nav a[href="#dev"] {
-  background: #36c9c6;
+main nav a[href="#dev"] em::after {
+  content: "👾";
 }
-main nav a[href="#cv"] {
-  background: #30c5ff;
+main nav a[href="#give"] em::after {
+  content: "🙏🏽";
+}
+main nav a[href="#cv"] em::after {
+  content: "📄";
+}
+main nav a[href="#faq"] em::after {
+  content: "⁉️";
+}
+
+main nav a:focus em::after,
+main nav a:hover em::after {
+  content: "↗️";
 }
 
 main nav a:focus,
 main nav a:hover {
-  color: #fff;
   text-decoration: none;
-  background: #000;
 }
-.card {
-  max-width: 18rem;
-  margin: 0 15px 15px 0;
+
+.navbar {
+  border-top: 5px solid;
+  padding-left: 0;
+  margin-left: 1rem;
+}
+
+.bubbles {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bubble Style */
+blockquote,
+p.bubble {
+  display: inline-block;
+  border-radius: 15px;
+  padding: 10px;
+  margin: 0 20px;
+  position: relative;
+  max-width: 70%;
+  border: 0;
+  z-index: 0;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+p.bubble {
+  align-self: flex-start;
+  color: black;
+  background: rgb(229, 229, 234);
+}
+
+p.bubble:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  left: -7px;
+  height: 20px;
+  border-left: 20px solid rgb(229, 229, 234);
+  border-bottom-right-radius: 16px 14px;
+  -webkit-transform: translate(0, -2px);
+}
+
+p.bubble:after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: -2px;
+  left: 18px;
+  width: 12px;
+  height: 20px;
+  background: white;
+  border-bottom-right-radius: 10px;
+  -webkit-transform: translate(-30px, -2px);
+}
+
+blockquote {
+  align-self: flex-end;
+  color: white;
+  background: rgb(63, 144, 241);
+}
+
+blockquote:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  right: -7px;
+  height: 20px;
+  border-right: 20px solid rgb(63, 144, 241);
+  border-bottom-left-radius: 16px 14px;
+  -webkit-transform: translate(0, -2px);
+}
+
+blockquote:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: -2px;
+  right: -42px;
+  width: 12px;
+  height: 20px;
+  background: white;
+  border-bottom-left-radius: 10px;
+  -webkit-transform: translate(-30px, -2px);
+}
+
+/* Form */
+form.bubble {
+  border-radius: 15px;
+  border: 1px solid rgb(229, 229, 234);
+  display: flex;
+  max-width: calc(100% - 30px);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  padding: 5px;
+}
+
+form.bubble input {
+  border: 0;
+  outline: 0;
+  flex-grow: 1;
+  height: 1em;
+  min-height: 1em;
+  max-height: 4em;
+  resize: vertical;
+}
+
+form.bubble button {
+  border-radius: 100%;
+  border: 0;
+  padding: 0 2px;
+  color: white;
+  background: rgb(63, 144, 241);
+  align-self: flex-end;
+  justify-content: flex-end;
+}
+
+form.bubble button img {
+  height: 1.2rem;
+  transform: scale(0.9);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-gap: 0.5rem;
+  align-items: flex-start;
+  grid-auto-columns: minmax(260px, 1fr);
+  grid-auto-flow: dense;
 }
