@@ -298,3 +298,61 @@ dialog p:first-of-type {
 dialog p::after {
   border-right-color: #f1f0ff;
 }
+
+.img-wrapper {
+  position: relative;
+  padding-bottom: 50%;
+  padding-top: 50%;
+  height: 0;
+}
+
+.img-wrapper::after {
+  content: "";
+  display: block;
+  width: 25%;
+  height: 25%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  animation: pulse 1s ease infinite;
+  background: #d3ceff;
+  transition: all 300ms ease-out;
+  clip-path: polygon(
+    50% 30%,
+    57% 13%,
+    78% 0,
+    100% 17%,
+    100% 48%,
+    50% 100%,
+    0 48%,
+    0 19%,
+    21% 0,
+    43% 14%
+  );
+}
+.img-wrapper.loaded::after {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.5);
+  animation: forwards;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.img-wrapper img {
+  background: #e9e7ff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
