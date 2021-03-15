@@ -1,0 +1,869 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BITS</title>
+    <meta
+      name="description"
+      content="A daily comic with a bit of learnings from Shan Naziripour"
+    />
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Concert+One&family=IM+Fell+English:ital@1&family=Work+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link href="css.css?_t=20210303" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/vue"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>
+        <img src="img/bits.png" alt="Bits" />
+        <small>Just A Bit</small>
+      </h1>
+    </header>
+    <div id="app">
+      <dialog v-bind:open="showInfo" v-if="showInfo">
+        <button class="cancel" v-on:click="cancelInfo">✖️</button>
+        <h2>What is this?</h2>
+        <p>
+          <em>Hi!</em>
+          I'm
+          <a href="https://shan.naziripour.com">Shan Naziripour</a>
+          .
+        </p>
+        <p>
+          I write this comic mostly to vent my current thoughts and
+          frustrations. I've always loved a single panel style comic. Something
+          that required little context to understand.
+        </p>
+        <p>The format is the single panel comic with</p>
+        <p>
+          I'm trying to get better at this- so I'm always up for feedback.
+          Rewrite any of the captions and send it to me. Click the ✐ button next
+          to the caption to try your own caption.
+        </p>
+        <p>That would be awesome.</p>
+      </dialog>
+      <dialog v-bind:open="showShare" v-on:close="cancelShare" v-if="showShare">
+        <button class="cancel" v-on:click="cancelShare">✖️</button>
+        <h2>Share this Comic</h2>
+        <ul>
+          <li>
+            <a v-bind:href="twitterUrl" target="_blank">Twitter</a>
+          </li>
+          <li>
+            <a v-bind:href="facebookUrl" target="_blank">Facebook</a>
+          </li>
+          <li>
+            <a v-bind:href="linkedinUrl" target="_blank">Linkedin</a>
+          </li>
+          <li>
+            <label>
+              Copy to Clipboard
+              <input readonly v-bind:value="shareUrl" v-on:focus="copy" />
+            </label>
+            <i v-show="copied">Copied!</i>
+          </li>
+        </ul>
+      </dialog>
+      <div v-bind:aria-hidden="showShare || showInfo">
+        <main id="comics">
+          <figure id="0">
+            <img src="img/0000.jpg" />
+            <figure-caption figure-id="0">
+              You’re tracking cookies
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-13T03:46:38.000Z"
+              title="Jan 12, 2021"
+            ></figure-time>
+            <p>Did you know?</p>
+            <p>
+              Every site you go to carries cookies. Every place you request for
+              shares information about where you've been what you've done. It's
+              invisible and happens behind the scenes.
+            </p>
+          </figure>
+          <figure id="1">
+            <img src="img/0001.jpg" />
+            <figure-caption figure-id="1">
+              Let’s blow this popsicle stand
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-16T08:13:32.000Z"
+              title="Jan 16, 2021"
+            ></figure-time>
+            <p>
+              Sometimes you just wanna run anarchy with your friends and wreak
+              chaos.
+            </p>
+          </figure>
+          <figure id="2">
+            <img src="img/0002.jpg" />
+            <figure-caption figure-id="2">
+              You’re too old for candy
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-17T08:37:29.000Z"
+              title="Jan 17, 2021"
+            ></figure-time>
+            <p>
+              I always feel that adults judge other adults for dressing up. When
+              did an adult make you feel ashamed of playing dressup?
+            </p>
+          </figure>
+          <figure id="3">
+            <img src="img/0003.jpg" />
+            <figure-caption figure-id="3">
+              Cupcake? More like a muffin in disguise!
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-18T04:50:37.000Z"
+              title="Jan 17, 2021"
+            ></figure-time>
+            <p>And to be honest I much prefer a good old bran muffin</p>
+          </figure>
+          <figure id="4">
+            <img src="img/0004.jpg" />
+            <figure-caption figure-id="4">
+              “Quick hide the mango pudding!”
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-20T06:39:15.000Z"
+              title="Jan 19, 2021"
+            ></figure-time>
+            <p>Remember the silly things you’d do with friends?</p>
+            <p>
+              This was when we'd go to all you can eat sushi and order 50 mango
+              puddings and hide what we couldn't eat in the teapot
+            </p>
+          </figure>
+          <figure id="5">
+            <img src="img/0005.jpg" />
+            <figure-caption figure-id="5">
+              I can’t eat tacos gracefully but can’t eat enough of them
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-21T08:08:28.000Z"
+              title="Jan 21, 2021"
+            ></figure-time>
+            <p>
+              Who doesn't love a taco? Delicious, nutritious, and perfectly
+              portioned.
+            </p>
+            <p>
+              It's just so difficult to enjoy them without the innards spilling
+              all over the place.
+            </p>
+          </figure>
+          <figure id="6">
+            <img src="img/0006.jpg" />
+            <figure-caption figure-id="6">Mmmm salad</figure-caption>
+            <figure-time
+              datetime="2021-01-22T05:00:55.000Z"
+              title="Jan 21, 2021"
+            ></figure-time>
+            <p>
+              I feel obligated to eat healthily. Vegetables and leafy greens are
+              great, but I'd much prefer to be eating fries and ketchup.
+            </p>
+            <p>
+              I feel like a rabbit. It's hard to know what's good for your body.
+            </p>
+          </figure>
+          <figure id="7">
+            <img src="img/0007.jpg" />
+            <figure-caption figure-id="7">
+              Sometimes we feel like a small fry
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-23T07:44:19.000Z"
+              title="Jan 22, 2021"
+            ></figure-time>
+            <p>
+              It's interesting how quickly we can feel like nothing. Our
+              headspace can change in an instant, and a challenge looms like a
+              massive obstacle.
+            </p>
+            <p>
+              But the beautiful part of humans is when we rise to that challenge
+              and overcome it.
+            </p>
+          </figure>
+          <figure id="8">
+            <img src="img/0008.jpg" />
+            <figure-caption figure-id="8">Hot tubs — human soup</figure-caption>
+            <figure-time
+              datetime="2021-01-23T20:51:08.000Z"
+              title="Jan 23, 2021"
+            ></figure-time>
+            <p>
+              I love a bath - it raises your blood so you can come back to your
+              body. And for someone who's in their head constantly, it's a great
+              reminder to get out of your head.
+            </p>
+          </figure>
+          <figure id="9">
+            <img src="img/0009.jpg" />
+            <figure-caption figure-id="9">Pick Nic, Picnic,</figure-caption>
+            <figure-time
+              datetime="2021-01-25T06:37:28.000Z"
+              title="Jan 24, 2021"
+            ></figure-time>
+            <p>
+              I'm just a huge fan of alliteration and playing with words as
+              though somehow the answer has always been there right in front of
+              your face, and you just needed to re-arrange the words to find new
+              meaning.
+            </p>
+            <p>Or just nonsense.</p>
+          </figure>
+          <figure id="10">
+            <img src="img/0010.jpg" />
+            <figure-caption figure-id="10">
+              Poutine was a luxury in high school only the rich kids ate
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-27T06:22:02.000Z"
+              title="Jan 26, 2021"
+            ></figure-time>
+            <p>
+              Growing up, we were not the richest, and I would make myself
+              cheese sandwiches with Kraft singles. Sometimes I would forget to
+              unwrap the cheese slice. The rich kids would eat poutine, and I
+              would stare up at them in envy.
+            </p>
+            <p>Now I may overeat poutine.</p>
+          </figure>
+          <figure id="11">
+            <img src="img/0011.jpg" />
+            <figure-caption figure-id="11">
+              Yah I know guac is extra
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-28T06:39:08.000Z"
+              title="Jan 27, 2021"
+            ></figure-time>
+            <p>
+              Yes, I eat at Subway, and yes, I love it, and yes, I may say this
+              all the time.
+            </p>
+            <p>Because you know what?</p>
+            <p>Avacado is a good kind of fat.</p>
+          </figure>
+          <figure id="12">
+            <img src="img/0012.jpg" />
+            <figure-caption figure-id="12">
+              tv and ice tea crystals were my weird addiction when I was a kid,
+              but really just sugar
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-30T08:31:26.000Z"
+              title="Jan 29, 2021"
+            ></figure-time>
+            <p>
+              I loved those ice tea crystals from Costco as a kid. I would sit
+              down in front of the TV and lick my finger and stick it in the tub
+              and scoop up some crystals, and put it right back in my mouth. On
+              top of being unsanitary, I would do this every day.
+            </p>
+            <p>Sugar was a huge part of my diet as a kid.</p>
+          </figure>
+          <figure id="13">
+            <img src="img/0013.jpg" />
+            <figure-caption figure-id="13">
+              My eyes get tired on zoom
+            </figure-caption>
+            <figure-time
+              datetime="2021-01-31T06:47:19.000Z"
+              title="Jan 30, 2021"
+            ></figure-time>
+            <p>
+              I don't know if anyone else gets this, but Zoom or any video
+              conference exhausts me. I don't think it's like "Zoom Fatigue,"
+              but I legitimately want to gouge out my eyes. I hate it with a
+              passion. I don't want to see an image of my face or fixate on a
+              snapshot of your face. Connecting to a picture of you is not the
+              same as connecting to your voice. I don't know if anyone agrees
+              with me, but now video conferencing is the norm, and I know it's
+              better to reach out than wall myself.
+            </p>
+            <p>
+              I have to be okay with wanting to gouge my eyes out on the
+              regular.
+            </p>
+          </figure>
+          <figure id="14">
+            <img src="img/0014.jpg" />
+            <figure-caption figure-id="14">Otter play</figure-caption>
+            <figure-time
+              datetime="2021-02-12T04:42:33.000Z"
+              title="Feb 11, 2021"
+            ></figure-time>
+            <p>
+              In gay terms, I'm an otter: Slender and hairy, and playful. There
+              is a significant typecasting among gay men.
+            </p>
+            <p>I wonder why that is.</p>
+          </figure>
+          <figure id="15">
+            <img src="img/0015.jpg" />
+            <figure-caption figure-id="15">
+              You should... know better.
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-19T23:58:38.000Z"
+              title="Feb 19, 2021"
+            ></figure-time>
+            <p>
+              A colleague said this to someone in a meeting and I got triggered
+              by it, maybe because it sounds like what I tell myself. Don’t
+              should others, don’t shit on yourself.
+            </p>
+          </figure>
+          <figure id="16">
+            <img src="img/0016.jpg" />
+            <figure-caption figure-id="16">
+              I forget how amazing my body is, how I can breathe and fart at the
+              same time. Don’t forget to hug yourself
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-22T03:21:25.000Z"
+              title="Feb 21, 2021"
+            ></figure-time>
+            <p>
+              Amidst all my shortcomings, I forget to honor my body. Appreciate
+              the art that I'm able to exist and be here in this moment
+              breathing, seeing, hearing, touching, and smelling. I may only be
+              smelling my farts.
+            </p>
+            <p>
+              But that means I should grab hold and squeeze harder than ever
+              before.
+            </p>
+          </figure>
+          <figure id="17">
+            <img src="img/0017.jpg" />
+            <figure-caption figure-id="17">
+              Lost? Looking? Keep searching. You’ll find it
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-23T05:35:16.000Z"
+              title="Feb 22, 2021"
+            ></figure-time>
+            <p>
+              Dating is exhausting sometimes. So when you are tired, take a
+              break and keep going. You'll find it because it will constantly be
+              changing. And remember, you're never lost.
+            </p>
+            <p>
+              You're right where you were supposed to be, even if that's not
+              where you were hoping to be.
+            </p>
+          </figure>
+          <figure id="18">
+            <img src="img/0018.jpg" />
+            <figure-caption figure-id="18">
+              Maybe I lost my marbles? Is that what I’m looking for?
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-25T04:19:39.000Z"
+              title="Feb 24, 2021"
+            ></figure-time>
+            <p>
+              I love the phrases with a double meaning. To lose one's marble is
+              to lose one's mind. What part of your mind does the marble
+              represent? Your thoughts? Part of your identity?
+            </p>
+            <p>
+              It's a curious conundrum, but the more I think about it the more
+              mad I get.
+            </p>
+          </figure>
+          <figure id="19">
+            <img src="img/0019.jpg" />
+            <figure-caption figure-id="19">
+              Or am I looking for a card? I don’t think I’ve got a full deck
+              here...
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-25T05:25:34.000Z"
+              title="Feb 24, 2021"
+            ></figure-time>
+            <p>
+              I love the phrases with a double meaning. Not having a full deck
+              means you're deficient in some way.
+            </p>
+            <p>A lot of the time, I feel like that.</p>
+          </figure>
+          <figure id="20">
+            <img src="img/0020.jpg" />
+            <figure-caption figure-id="20">
+              It’s nuts, nothing makes sense.
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-26T17:34:22.000Z"
+              title="Feb 26, 2021"
+            ></figure-time>
+            <p>
+              I love the phrases with a double meaning. "Its nuts" is such a
+              simple statement that refers to the environment being mad. Do you
+              ever feel the world doesn't make sense every way you try to look
+              at it?
+            </p>
+            <p>Now, why do nuts represent that? Even more maddening.</p>
+          </figure>
+          <figure id="21">
+            <img src="img/0021.jpg" />
+            <figure-caption figure-id="21">
+              Nuts, then you remember how they give you cramps and you just wish
+              you could be normal, yay irritable bowel syndrome
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-27T22:59:36.000Z"
+              title="Feb 27, 2021"
+            ></figure-time>
+            <p>
+              I've struggled with IBS for most of my life. It's manageable, but
+              I get flare-ups every once in a while. I wish my body would be
+              okay; still, I'm constantly monitoring what I eat and how it makes
+              me feel. And some things like nuts can flare things up.
+            </p>
+            <p>It's not great, but it's life.</p>
+            <p>
+              And sometimes, for weeks on end, all I can stomach is toast and
+              rice.
+            </p>
+          </figure>
+          <figure id="22">
+            <img src="img/0022.jpg" />
+            <figure-caption figure-id="22">
+              *Stares into the abyss of nothingness as this weighted blanket
+              holds me down*
+            </figure-caption>
+            <figure-time
+              datetime="2021-02-28T22:27:21.000Z"
+              title="Feb 28, 2021"
+            ></figure-time>
+            <p>
+              I miss human contact so I got a weighted blanket, I’m not sure if
+              it’s comforting or just gravity telling me to go deep into the
+              earth.
+            </p>
+          </figure>
+          <figure id="23">
+            <img src="img/0023.jpg" />
+            <figure-caption figure-id="23">
+              Rub a dub dub, me in a tub
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-01T23:31:24.000Z"
+              title="Mar 1, 2021"
+            ></figure-time>
+            <p>
+              One thing I do love is baths, it’s calming and brings you back to
+              your body. I forget my body all the time.
+            </p>
+          </figure>
+          <figure id="24">
+            <img src="img/0024.jpg" />
+            <figure-caption figure-id="24">
+              Uhhhhhhhhhhhhnnnnn. I wish I was touching my toes. I wish I was
+              better
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-02T19:52:29.000Z"
+              title="Mar 2, 2021"
+            ></figure-time>
+            <p>
+              In a world where we idolize the extraordinary it’s okay to exist
+              and not be the best.
+            </p>
+            <p>You are great the way you are</p>
+          </figure>
+          <figure id="25">
+            <img src="img/0025.jpg" />
+            <figure-caption figure-id="25">
+              Sometimes things are better upside down.
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-04T04:08:12.000Z"
+              title="Mar 3, 2021"
+            ></figure-time>
+            <p>
+              I get so frustrated so I try to look at things from a new
+              perspective.
+            </p>
+            <p>It’s funnier that way.</p>
+          </figure>
+          <figure id="26">
+            <img src="img/0026.png" />
+            <figure-caption figure-id="26">Don’t die</figure-caption>
+            <figure-time
+              datetime="2021-03-06T08:58:16.000Z"
+              title="Mar 6, 2021"
+            ></figure-time>
+            <p>
+              I’m learning to drive as a 34 year old and all I repeat in my head
+              is don’t die.
+            </p>
+            <p>
+              Driving is madness - maneuvering a metal box while accelerating at
+              ridiculous speeds and you’re supposed to not crash?!
+            </p>
+          </figure>
+          <figure id="27">
+            <img src="img/0025.jpg" />
+            <figure-caption figure-id="27">Give me space</figure-caption>
+            <figure-time
+              datetime="2021-03-07T06:42:11.000Z"
+              title="Mar 6, 2021"
+            ></figure-time>
+            <p>
+              When you’re going through tough times some people say you need to
+              be smothered with more love more hugs as though that will fix
+              things.
+            </p>
+            <p>And sometimes I need space.</p>
+          </figure>
+          <figure id="28">
+            <img src="img/0028.png" />
+            <figure-caption figure-id="28">
+              … space to dance with no one watching
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-08T05:06:55.000Z"
+              title="Mar 7, 2021"
+            ></figure-time>
+            <p>
+              I'm a terrible dancer, I want to be fluid but my body will only
+              move so far and
+            </p>
+          </figure>
+          <figure id="29">
+            <img src="img/0029.png" />
+            <figure-caption figure-id="28">
+              Worship of false idols
+            </figure-caption>
+
+            <figure-time
+              datetime="2021-03-10T05:53:16.000Z"
+              title="Mar 9, 2021"
+            ></figure-time>
+            <p>
+              I tend to fixate on beauty and putting things on pedestals when in
+              fact I think I should get my head out of my ass.
+            </p>
+            <p>It’s pretty dark in there.</p>
+          </figure>
+          <figure id="30">
+            <img src="img/0030.jpg" />
+            <figure-caption figure-id="30">Suns out buns out</figure-caption>
+            <figure-time
+              datetime="2021-03-11T04:45:30.000Z"
+              title="Mar 10, 2021"
+            ></figure-time>
+            <p>
+              We were blessed with some sun today and when the it does come out
+              here it’s honoured and appreciated
+            </p>
+          </figure>
+          <figure id="31">
+            <img src="img/0031.jpg" />
+            <figure-caption figure-id="31">
+              I’ll take this as a suppository.
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-12T04:29:38.000Z"
+              title="Mar 11, 2021"
+            ></figure-time>
+            <p>
+              My nephew is getting suppositories which reminded me of the time I
+              too was getting suppositories as a kid. I don’t remember why, but
+              I was always shocked how you could absorb medicine that way.
+            </p>
+            <p>
+              Like I always thought wasn’t I just going to poop it out after?
+            </p>
+          </figure>
+          <figure id="32">
+            <img src="img/0032.jpg" />
+            <figure-caption figure-id="32">
+              911? A bird pooped on me, I need an ambulance... and a hairdresser
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-13T05:27:12.000Z"
+              title="Mar 12, 2021"
+            ></figure-time>
+            <p>It's funny how being shit on can mess up your entire day.</p>
+            <p>Also funny how dramatic I can be.</p>
+          </figure>
+          <figure id="33">
+            <img src="img/0033.png" />
+            <figure-caption figure-id="33">Doubleunders</figure-caption>
+            <figure-time
+              datetime="2021-03-15T04:30:50.000Z"
+              title="Mar 14, 2021"
+            ></figure-time>
+            <p>I did the CrossFit open 21.1 and got 80 reps 🎉</p>
+            <p>
+              Damn there were a lot of doubleunders which I can't even do
+              without 10 attempts.
+            </p>
+          </figure>
+        </main>
+        <footer>
+          With 💜
+          <a href="mailto:shan@naziripour.com?subject=Bits%20Feedback">
+            Shan Naziripour
+          </a>
+        </footer>
+        <nav>
+          <button v-bind:disabled="current == max" v-on:click="last">
+            ⏮
+            <span>Newest</span>
+          </button>
+          <button v-bind:disabled="current == max" v-on:click="newer">
+            ⏪
+            <span>Newer</span>
+          </button>
+          <button v-on:click="share">
+            🆒
+            <span>Share</span>
+          </button>
+          <button v-on:click="info">
+            ℹ️
+            <span>Info</span>
+          </button>
+          <button v-bind:disabled="current == min" v-on:click="older">
+            <span>Older</span>
+            ⏩
+          </button>
+          <button v-bind:disabled="current == min" v-on:click="first">
+            <span>First</span>
+            ⏭
+          </button>
+        </nav>
+      </div>
+    </div>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-34564934-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "UA-34564934-1");
+    </script>
+    <script>
+      Vue.component("figure-time", {
+        props: ["title", "datetime"],
+        template: `<time v-bind:title="title" v-bind:datetime="datetime" >{{title}}</time>`,
+      });
+      Vue.component("figure-caption", {
+        props: ["figureId"],
+        data: function () {
+          return {
+            editMode: false,
+            value: null,
+          };
+        },
+        computed: {
+          link: function () {
+            if (!this.value) {
+              return "#";
+            }
+            const subject = encodeURIComponent(
+              `Bits Caption for ${this.figureId}`
+            );
+            const body = encodeURIComponent(this.value);
+            return `mailto:shan@naziripour.com?subject=${subject}&body=${body}`;
+          },
+        },
+        methods: {
+          edit: function () {
+            gtag("event", "bit_edit", {
+              event_category: `Bits:${this.figureId}`,
+              event_label: "Edit",
+            });
+            this.editMode = true;
+
+            // Focus the component, but we have to wait
+            // so that it will be showing first.
+            Vue.nextTick(
+              function () {
+                // DOM updated
+                this.$refs.body.focus();
+              }.bind(this)
+            );
+          },
+          send: function () {
+            gtag("event", "bit_send", {
+              event_category: `Bits:${this.figureId}`,
+              event_label: this.value,
+            });
+            this.editMode = false;
+          },
+          cancel: function () {
+            gtag("event", "bit_cancel", {
+              event_category: `Bits:${this.figureId}`,
+              event_label: "Cancel",
+            });
+            this.value = null;
+            this.editMode = false;
+          },
+        },
+        template: `<figcaption>
+            <div class="form" v-if="editMode">
+              <textarea ref="body" v-model="value" placeholder="Your Caption" />
+              <a class="button" v-on:click="send" v-bind:disabled="!value" v-bind:href="link" target="_blank" title="Send your caption to me!">✉️ Send</a>
+              <button class="button" type="button" v-on:click="cancel" >Cancel</button>
+            </div>
+            <div v-else>
+                <span v-if="value">
+                  {{value}}
+                </span>
+                <span v-else>
+                  <slot></slot>
+                </span>
+                <button v-on:click="edit" title="Edit">✐</button>
+                <i v-if="value">(edited)</i>
+            </div>
+          </figcaption>`,
+      });
+      const max = document.getElementById("comics").childElementCount - 1;
+      const current = location.hash ? window.location.hash.substring(1) : max;
+      var app = new Vue({
+        el: "#app",
+        data: {
+          current,
+          max,
+          min: 0,
+          showInfo: false,
+          showShare: false,
+          copied: false,
+        },
+        computed: {
+          shareUrl: function () {
+            ga("send", "event", "Videos", "play", "Fall Campaign");
+            return `${location.href.split("#")[0]}#${this.current}`;
+          },
+          twitterUrl: function () {
+            return `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+              this.shareUrl
+            )}`;
+          },
+          facebookUrl: function () {
+            return `http://www.facebook.com/sharer.php?u=${encodeURIComponent(
+              this.shareUrl
+            )}`;
+          },
+          linkedinUrl: function () {
+            return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+              this.shareUrl
+            )}`;
+          },
+        },
+        methods: {
+          copy: function ({ target }) {
+            gtag("event", "bit_copy", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Copy",
+            });
+            /* Select the text field */
+            target.select();
+            target.setSelectionRange(0, 99999); /* For mobile devices */
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+            this.copied = true;
+            setTimeout(() => {
+              this.copied = false;
+            }, 700);
+          },
+          newer: function () {
+            gtag("event", "bit_newer", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Newer",
+            });
+            location.hash = this.current = this.current + 1;
+          },
+          older: function () {
+            gtag("event", "bit_older", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Older",
+            });
+            location.hash = this.current = this.current - 1;
+          },
+          first: function () {
+            gtag("event", "bit_first", {
+              event_category: `Bits:${this.current}`,
+              event_label: "First",
+            });
+            location.hash = this.current = this.min;
+          },
+          last: function () {
+            gtag("event", "bit_last", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Last",
+            });
+            location.hash = this.current = this.max;
+          },
+          cancelShare: function () {
+            gtag("event", "bit_cancel_share", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Cancel",
+            });
+            this.showShare = false;
+          },
+          share: function () {
+            const canShare = navigator && navigator.share !== undefined;
+            gtag("event", "bit_share", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Share",
+              event_value: canShare,
+            });
+            if (canShare) {
+              navigator
+                .share({
+                  url: this.shareUrl,
+                })
+                .then(() => console.log("Successful share"))
+                .catch((error) => console.log("Error sharing:", error));
+            } else {
+              this.showShare = true;
+            }
+          },
+          cancelInfo: function () {
+            gtag("event", "bit_cancel_info", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Info",
+            });
+            this.showInfo = false;
+          },
+          info: function () {
+            gtag("event", "bit_info", {
+              event_category: `Bits:${this.current}`,
+              event_label: "Info",
+            });
+            this.showInfo = true;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
