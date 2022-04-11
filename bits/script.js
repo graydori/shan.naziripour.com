@@ -5,149 +5,31 @@ function gtag() {
 gtag("js", new Date());
 gtag("config", "UA-34564934-1");
 
-Vue.directive("lazyload", {
-    inserted: (el) => {
-        function loadImage() {
-            const imageElement = Array.from(el.children).find(
-                (el) => el.nodeName === "IMG"
-            );
-            if (imageElement) {
-                imageElement.addEventListener("load", () => {
-                    setTimeout(() => el.classList.add("loaded"), 100);
-                });
-                imageElement.addEventListener("error", () =>
-                    console.log("error")
-                );
-                imageElement.src = imageElement.dataset.url;
-            }
-        }
+const max = document.getElementById("comics").childElementCount - 2;
+let current = max;
+if (location.hash) {
+    const hash = parseInt(location.hash.substring(1));
+    if (hash < 0 || hash > max) {
+        location.hash = ""; // reset
+    } else {
+      current = hash;
+    }
+}
+debugger;
 
-        function handleIntersect(entries, observer) {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    loadImage();
-                    observer.unobserve(el);
-                }
-            });
-        }
-
-        function createObserver() {
-            const options = {
-                root: null,
-                threshold: "0",
-            };
-            const observer = new IntersectionObserver(handleIntersect, options);
-            observer.observe(el);
-        }
-        if (window["IntersectionObserver"]) {
-            createObserver();
-        } else {
-            loadImage();
-        }
-    },
-});
-Vue.component("figure-image", {
-    props: ["figureId", "fileType"],
-    computed: {
-        alt: function () {
-            return `Bits Comic: Number ${this.figureId}`;
-        },
-        source: function () {
-            return `img/${("0000" + this.figureId).slice(-4)}.${this.fileType}`;
-        },
-    },
-    template: `<div v-lazyload class="img-wrapper"><img :data-url="source" :alt="alt" /></div>`,
-});
-Vue.component("figure-time", {
-    props: ["title", "datetime"],
-    template: `<time v-bind:title="title" v-bind:datetime="datetime" >{{title}}</time>`,
-});
-Vue.component("figure-caption", {
-    props: ["figureId"],
-    data: function () {
-        return {
-            editMode: false,
-            value: null,
-        };
-    },
-    computed: {
-        link: function () {
-            if (!this.value) {
-                return "#";
-            }
-            const subject = encodeURIComponent(
-                `Bits Caption for ${this.figureId}`
-            );
-            const body = encodeURIComponent(this.value);
-            return `mailto:shan@naziripour.com?subject=${subject}&body=${body}`;
-        },
-    },
-    methods: {
-        edit: function () {
-            gtag("event", "bit_edit", {
-                event_category: `Bits:${this.figureId}`,
-                event_label: "Edit",
-            });
-            this.editMode = true;
-
-            // Focus the component, but we have to wait
-            // so that it will be showing first.
-            Vue.nextTick(
-                function () {
-                    // DOM updated
-                    this.$refs.body.focus();
-                }.bind(this)
-            );
-        },
-        send: function () {
-            gtag("event", "bit_send", {
-                event_category: `Bits:${this.figureId}`,
-                event_label: this.value,
-            });
-            this.editMode = false;
-        },
-        cancel: function () {
-            gtag("event", "bit_cancel", {
-                event_category: `Bits:${this.figureId}`,
-                event_label: "Cancel",
-            });
-            this.value = null;
-            this.editMode = false;
-        },
-    },
-    template: `<figcaption>
-        <div class="form" v-if="editMode">
-          <textarea ref="body" v-model="value" placeholder="Your Caption" />
-          <a class="button" v-on:click="send" v-bind:disabled="!value" v-bind:href="link" target="_blank" title="Send your caption to me!">✉️ Send</a>
-          <button class="button" type="button" v-on:click="cancel" >Cancel</button>
-        </div>
-        <div v-else>
-            <span v-if="value">
-              {{value}}
-            </span>
-            <span v-else>
-              <slot></slot>
-            </span>
-            <button v-on:click="edit" title="Edit">✐</button>
-            <i v-if="value">(edited)</i>
-        </div>
-      </figcaption>`,
-});
-const max = document.getElementById("comics").childElementCount - 1;
-const current = location.hash ? window.location.hash.substring(1) : max;
-var app = new Vue({
-    el: "#app",
-    data: {
+var app = Vue.createApp({
+    data() {
+      return {
         current,
         max,
         min: 0,
         showInfo: false,
         showShare: false,
         copied: false,
+      };
     },
     computed: {
         shareUrl: function () {
-            ga("send", "event", "Videos", "play", "Fall Campaign");
             return `${location.href.split("#")[0]}#${this.current}`;
         },
         twitterUrl: function () {
@@ -252,3 +134,204 @@ var app = new Vue({
         },
     },
 });
+app.directive("lazyload-video", {
+  beforeMount(el){
+      function loadVideo() {
+        if (el.nodeName !== "VIDEO") throw new Error("lazyload-video directive must be applied to a <video> element");
+        el.addEventListener("canplay", () => 
+          el.classList.add("loaded")
+        );
+          el.addEventListener("error", () =>
+              console.log("error")
+          );
+          el.autoplay = true;
+          el.loop = true;
+          el.muted = true; // muted videos can only autoplay
+          el.preload = "auto";
+          el.src = el.dataset.src;
+          el.poster = el.dataset.poster;
+          
+      }
+      function handleIntersect(entries, observer) {
+          entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                loadVideo();
+                  observer.unobserve(el);
+              }
+          });
+      }
+
+      function createObserver() {
+          const options = {
+              root: null,
+              threshold: "0",
+          };
+          const observer = new IntersectionObserver(handleIntersect, options);
+          observer.observe(el);
+      }
+      if (window["IntersectionObserver"]) {
+          createObserver();
+      } else {
+        loadVideo();
+      }
+  }
+});
+app.directive("lazyload-img", {
+  beforeMount(el){
+      function loadImage() {
+        if (el.nodeName !== "IMG") throw new Error("lazyload-img directive must be applied to a <img> element");
+        el.addEventListener("load", () => el.classList.add("loaded"));
+        el.addEventListener("error", () =>
+            console.log("error")
+        );
+        el.src = el.dataset.url;
+      }
+      function handleIntersect(entries, observer) {
+          entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                  loadImage();
+                  observer.unobserve(el);
+              }
+          });
+      }
+      function createObserver() {
+          const options = {
+              root: null,
+              threshold: "0",
+          };
+          const observer = new IntersectionObserver(handleIntersect, options);
+          observer.observe(el);
+      }
+      if (window["IntersectionObserver"]) {
+          createObserver();
+      } else {
+          loadImage();
+      }
+  }
+});
+app.component("figure", {
+  props: ["id"],
+  computed: {
+      fileName() {
+        return `0000${this.id}`.slice(-4);
+      },
+      alt: function () {
+          return `Bits Comic: Number ${this.id}`;
+      },
+      poster: function () {
+        return `img/${this.fileName}.png`;
+      },
+      source: function () {
+          return `img/${this.fileName}.mp4`;
+      },
+  },
+});
+
+app.component("figure-video", {
+  props: ["figureId"],
+  computed: {
+      fileName() {
+        return `0000${this.figureId}`.slice(-4);
+      },
+      alt: function () {
+          return `Bits Comic: Number ${this.figureId}`;
+      },
+      poster: function () {
+        return `img/${this.fileName}.png`;
+      },
+      source: function () {
+          return `img/${this.fileName}.mp4`;
+      },
+  },
+  template: `<video v-lazyload-video class="loader" :data-src="source" :data-poster="poster" :alt="alt" />`,
+});
+
+app.component("figure-image", {
+  props: ["figureId", "fileType"],
+  computed: {
+      alt: function () {
+          return `Bits Comic: Number ${this.figureId}`;
+      },
+      source: function () {
+          return `img/${("0000" + this.figureId).slice(-4)}.${this.fileType}`;
+      },
+  },
+  template: `<img v-lazyload-img class="loader" :data-url="source" :alt="alt" />`,
+});
+app.component("figure-time", {
+  props: ["title", "datetime"],
+  template: `<time v-bind:title="title" v-bind:datetime="datetime" >{{title}}</time>`,
+});
+app.component("figure-caption", {
+  props: ["figureId"],
+  data: function () {
+      return {
+          editMode: false,
+          value: null,
+      };
+  },
+  computed: {
+      link: function () {
+          if (!this.value) {
+              return "#";
+          }
+          const subject = encodeURIComponent(
+              `Bits Caption for ${this.figureId}`
+          );
+          const body = encodeURIComponent(this.value);
+          return `mailto:shan@naziripour.com?subject=${subject}&body=${body}`;
+      },
+  },
+  methods: {
+      edit: function () {
+          gtag("event", "bit_edit", {
+              event_category: `Bits:${this.figureId}`,
+              event_label: "Edit",
+          });
+          this.editMode = true;
+
+          // Focus the component, but we have to wait
+          // so that it will be showing first.
+          Vue.nextTick(
+              function () {
+                  // DOM updated
+                  this.$refs.body.focus();
+              }.bind(this)
+          );
+      },
+      send: function () {
+          gtag("event", "bit_send", {
+              event_category: `Bits:${this.figureId}`,
+              event_label: this.value,
+          });
+          this.editMode = false;
+      },
+      cancel: function () {
+          gtag("event", "bit_cancel", {
+              event_category: `Bits:${this.figureId}`,
+              event_label: "Cancel",
+          });
+          this.value = null;
+          this.editMode = false;
+      },
+  },
+  template: `<figcaption>
+      <div class="form" v-if="editMode">
+        <textarea ref="body" v-model="value" placeholder="Your Caption" />
+        <a class="button" v-on:click="send" v-bind:disabled="!value" v-bind:href="link" target="_blank" title="Send your caption to me!">✉️ Send</a>
+        <button class="button" type="button" v-on:click="cancel" >Cancel</button>
+      </div>
+      <div v-else>
+          <span v-if="value">
+            {{value}}
+          </span>
+          <span v-else>
+            <slot></slot>
+          </span>
+          <button v-on:click="edit" title="Edit">✐</button>
+          <i v-if="value">(edited)</i>
+      </div>
+    </figcaption>`,
+});
+
+app.mount("#app");

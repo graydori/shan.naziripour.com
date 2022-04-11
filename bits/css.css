@@ -33,6 +33,7 @@ figure {
   max-width: 600px;
 }
 
+figure video,
 figure img {
   width: 80%;
   align-self: center;
@@ -199,6 +200,7 @@ nav button:hover span {
   nav button span {
     display: none;
   }
+  figure video,
   figure img {
     width: 100%;
   }
@@ -299,60 +301,24 @@ dialog p::after {
   border-right-color: #f1f0ff;
 }
 
-.img-wrapper {
-  position: relative;
-  padding-bottom: 50%;
-  padding-top: 50%;
-  height: 0;
+/* Loading */
+.loader {
+  background: repeating-linear-gradient(-45deg,#f1f0ff,#f1f0ff 20px,#fff 20px,#fff 40px);
+	background-size:56px 56px;/* This is unique for this background, need to find a pattern and develop a formula */
+	background-position-x:0%;
+	animation: slide 20s infinite linear forwards;
+  aspect-ratio: 1/1;
 }
 
-.img-wrapper::after {
-  content: "";
-  display: block;
-  width: 25%;
-  height: 25%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  animation: pulse 1s ease infinite;
-  background: #d3ceff;
-  transition: all 300ms ease-out;
-  clip-path: polygon(
-    50% 30%,
-    57% 13%,
-    78% 0,
-    100% 17%,
-    100% 48%,
-    50% 100%,
-    0 48%,
-    0 19%,
-    21% 0,
-    43% 14%
-  );
-}
-.img-wrapper.loaded::after {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.5);
-  animation: forwards;
+@keyframes slide {
+	0%{
+		background-position-x:0%;
+	}
+	100% {
+		background-position-x:100%;
+	}
 }
 
-@keyframes pulse {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.3);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-.img-wrapper img {
-  background: #e9e7ff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.loader.loaded {
+  background: none;
 }

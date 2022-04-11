@@ -9,10 +9,10 @@
       content="A daily comic with a bit of learnings from Shan Naziripour"
     />
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-    <link rel="manifest" href="site.webmanifest" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16x16.png" />
+    <link rel="manifest" href="icon/site.webmanifest" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -22,6 +22,30 @@
     />
     <link href="css.css?_t=20210303" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/vue"></script>
+    <script>
+      window['_fs_debug'] = false;
+      window['_fs_host'] = 'fullstory.com';
+      window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
+      window['_fs_org'] = '198R12';
+      window['_fs_namespace'] = 'FS';
+      (function(m,n,e,t,l,o,g,y){
+          if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
+          g=m[e]=function(a,b,s){g.q?g.q.push([a,b,s]):g._api(a,b,s);};g.q=[];
+          o=n.createElement(t);o.async=1;o.crossOrigin='anonymous';o.src='https://'+_fs_script;
+          y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+          g.identify=function(i,v,s){g(l,{uid:i},s);if(v)g(l,v,s)};g.setUserVars=function(v,s){g(l,v,s)};g.event=function(i,v,s){g('event',{n:i,p:v},s)};
+          g.anonymize=function(){g.identify(!!0)};
+          g.shutdown=function(){g("rec",!1)};g.restart=function(){g("rec",!0)};
+          g.log = function(a,b){g("log",[a,b])};
+          g.consent=function(a){g("consent",!arguments.length||a)};
+          g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
+          g.clearUserCookie=function(){};
+          g.setVars=function(n, p){g('setVars',[n,p]);};
+          g._w={};y='XMLHttpRequest';g._w[y]=m[y];y='fetch';g._w[y]=m[y];
+          if(m[y])m[y]=function(){return g._w[y].apply(this,arguments)};
+          g._v="1.3.0";
+      })(window,document,window['_fs_namespace'],'script','user');
+    </script>
   </head>
 
   <body>
@@ -32,51 +56,7 @@
       </h1>
     </header>
     <div id="app">
-      <dialog v-bind:open="showInfo" v-if="showInfo">
-        <button class="cancel" v-on:click="cancelInfo">✖️</button>
-        <h2>What is this?</h2>
-        <p>
-          <em>Hi!</em>
-          I'm
-          <a href="https://shan.naziripour.com">Shan Naziripour</a>
-          .
-        </p>
-        <p>
-          I write this comic mostly to vent my current thoughts and
-          frustrations. I've always loved a single panel style comic. Something
-          that required little context to understand.
-        </p>
-        <p>The format is the single panel comic with</p>
-        <p>
-          I'm trying to get better at this- so I'm always up for feedback.
-          Rewrite any of the captions and send it to me. Click the ✐ button next
-          to the caption to try your own caption.
-        </p>
-        <p>That would be awesome.</p>
-      </dialog>
-      <dialog v-bind:open="showShare" v-on:close="cancelShare" v-if="showShare">
-        <button class="cancel" v-on:click="cancelShare">✖️</button>
-        <h2>Share this Comic</h2>
-        <ul>
-          <li>
-            <a v-bind:href="twitterUrl" target="_blank">Twitter</a>
-          </li>
-          <li>
-            <a v-bind:href="facebookUrl" target="_blank">Facebook</a>
-          </li>
-          <li>
-            <a v-bind:href="linkedinUrl" target="_blank">Linkedin</a>
-          </li>
-          <li>
-            <label>
-              Copy to Clipboard
-              <input readonly v-bind:value="shareUrl" v-on:focus="copy" />
-            </label>
-            <i v-show="copied">Copied!</i>
-          </li>
-        </ul>
-      </dialog>
-      <div v-bind:aria-hidden="showShare || showInfo">
+      <div v-bind:aria-hidden="showShare || showInfo? true : null">
         <main id="comics">
           <figure id="0">
             <figure-image figure-id="0" file-type="jpg"></figure-image>
@@ -119,7 +99,7 @@
             ></figure-time>
             <p>
               I always feel that adults judge other adults for dressing up. When
-              did an adult make you feel ashamed of playing dressup?
+              did an adult make you feel ashamed of playing dress up?
             </p>
           </figure>
           <figure id="3">
@@ -761,6 +741,148 @@
             </p>
             <p>😉</p>
           </figure>
+          <figure id="42">
+            <figure-image figure-id="42" file-type="png"></figure-image>
+            <figure-caption figure-id="42">
+              Getting in sticky situations...
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-24T05:01:30.000Z"
+              title="Mar 23, 2021"
+            ></figure-time>
+            <p>
+              I’m working on a mascot head for a sexy Pokémon burlesque show
+              with
+              <a href="https://www.geekenders.net/">@geekenders</a>
+              and it’s a sticky situation, spray glue is sticky and everywhere.
+            </p>
+            <p>
+              Let’s hope this doesn’t look like total trash more like trashy
+            </p>
+            <p>😉</p>
+          </figure>
+          <figure id="43">
+            <figure-video figure-id="43" ></figure-video>
+            <figure-caption figure-id="43">
+              Sew it
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-25T05:01:30.000Z"
+              title="Mar 25, 2021"
+            ></figure-time>
+            <p>
+              Adding batting to the head to soften my shaping of the foam. 
+              Who knew there were so many steps in creating a mascot head?
+            </p>
+          </figure>
+          <figure id="44">
+            <figure-image figure-id="44" file-type="png"></figure-image>
+            <figure-caption figure-id="44">
+              Muscle up attempt no. 69
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-26T05:01:30.000Z"
+              title="Mar 26, 2021"
+            ></figure-time>
+            <p>
+              Did the CrossFit Open 21.3 and 21.4 and couldn’t get past the muscle ups, but I tried
+            </p>
+            <p>
+              🙃 maybe ill get it eventually
+            </p>
+          </figure>
+          <figure id="45">
+            <figure-video figure-id="45" ></figure-video>
+            <figure-caption figure-id="45">
+              Knit one, purl two
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-27T05:01:30.000Z"
+              title="Mar 27, 2021"
+            ></figure-time>
+            <p>
+              When you get sick of one project switch to another project.
+            </p>
+          </figure>
+          <figure id="46">
+            <figure-video figure-id="46" ></figure-video>
+            <figure-caption figure-id="46">
+              I love watching you... DIE
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-26T05:01:30.000Z"
+              title="Mar 26, 2021"
+            ></figure-time>
+            <p>
+              I’m really bad at taking care of plants and part of me just 
+              loves watching the decay of a plant over time.
+            </p>
+            <p>
+              Especially with the monotony of days nowadays.
+            </p>
+            <p>
+              I’m a terrible person.
+            </p>
+          </figure>
+          <figure id="47">
+            <figure-video figure-id="47" ></figure-video>
+            <figure-caption figure-id="47">
+              Take off your clothes, I want them!
+            </figure-caption>
+            <figure-time
+              datetime="2021-03-31T05:01:30.000Z"
+              title="Mar 31, 2021"
+            ></figure-time>
+            <p>When you see someone with amazing taste and want to mug them for their clothes.</p>
+          </figure>
+          <figure id="48">
+            <figure-video figure-id="48" ></figure-video>
+            <figure-caption figure-id="48">Crybaby
+            </figure-caption>
+            <figure-time
+              datetime="2021-04-01T05:01:30.000Z"
+              title="Apr 1, 2021"
+            ></figure-time>
+            <p>I’ve been crying while walking and listening to an audio book.</p>
+            <p>A little life by Hanya Yanagihara is beautiful </p>
+          </figure>
+          <figure id="49">
+            <figure-video figure-id="49" ></figure-video>
+            <figure-caption figure-id="49">Gin
+            </figure-caption>
+            <figure-time
+              datetime="2021-04-04T05:01:30.000Z"
+              title="Apr 4, 2021"
+            ></figure-time>
+            <p>When your bestie beats you at gin again</p>
+            <p>They have been destroying me at gin. Over and over, but it’s fun, right? 
+              It’s fun losing because you got to play a game with your bestie</p>
+          </figure>
+          <figure id="50">
+            <figure-video figure-id="50" ></figure-video>
+            <figure-caption figure-id="50">I didn’t just get a hair cut I got all my hair cut
+            </figure-caption>
+            <figure-time
+              datetime="2021-04-05T05:01:30.000Z"
+              title="Apr 5, 2021"
+            ></figure-time>
+            <p>Goodbye mullet. Hello again fade.</p>
+          </figure>
+          <!-- 0051 -->
+          <!-- 0052 -->
+          <!-- 0053 -->
+          <!-- 0054 -->
+          <!-- 0055 -->
+          <!-- 0056 -->
+          <!-- 0057 -->
+          <!-- 0058 -->
+          <!-- 0059 -->
+          <!-- 0060 -->
+          <!-- 0061 -->
+          <!-- 0062 -->
+          <!-- 0063 -->
+          <!-- 0064 -->
+          <!-- 0065 -->
         </main>
         <footer>
           With 💜
@@ -795,6 +917,51 @@
           </button>
         </nav>
       </div>
+      <dialog v-bind:open="showInfo" v-if="showInfo">
+        <button class="cancel" v-on:click="cancelInfo">✖️</button>
+        <h2>What is this?</h2>
+        <p>
+          <em>Hi!</em>
+          I'm
+          <a href="https://shan.naziripour.com">Shan Naziripour</a>
+          .
+        </p>
+        <p>
+          I write this comic mostly to vent my current thoughts and
+          frustrations. I've always loved a single panel style comic. Something
+          that required little context to understand.
+        </p>
+        <p>The format is the single panel comic with</p>
+        <p>
+          I'm trying to get better at this- so I'm always up for feedback.
+          Rewrite any of the captions and send it to me. Click the ✐ button next
+          to the caption to try your own caption.
+        </p>
+        <p>That would be awesome.</p>
+      </dialog>
+      <dialog v-bind:open="showShare" v-on:close="cancelShare" v-if="showShare">
+        <button class="cancel" v-on:click="cancelShare">✖️</button>
+        <h2>Share this Comic</h2>
+        <ul>
+          <li>
+            <a v-bind:href="twitterUrl" target="_blank">Twitter</a>
+          </li>
+          <li>
+            <a v-bind:href="facebookUrl" target="_blank">Facebook</a>
+          </li>
+          <li>
+            <a v-bind:href="linkedinUrl" target="_blank">Linkedin</a>
+          </li>
+          <li>
+            <label>
+              Copy to Clipboard
+              <input readonly v-bind:value="shareUrl" v-on:focus="copy" />
+            </label>
+            <i v-show="copied">Copied!</i>
+          </li>
+        </ul>
+      </dialog>
+
     </div>
     <script
       async
