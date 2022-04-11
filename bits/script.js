@@ -15,7 +15,6 @@ if (location.hash) {
       current = hash;
     }
 }
-debugger;
 
 var app = Vue.createApp({
     data() {
