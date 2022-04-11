@@ -8,7 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "node-fetch": "^3.0.0-beta.9",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "react": "^16.14.0",
     "react-auto-bind": "^0.4.2",
     "react-dom": "^16.14.0",
