@@ -22,7 +22,7 @@ h1 small {
 
 main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 figure {
@@ -39,10 +39,50 @@ figure img {
   align-self: center;
 }
 
+figure .figure-set {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+figure .figure-set ol li {
+  display: inline-flex;
+  flex: 1 1 0;
+}
+
+figure .figure-set ol li video,
+figure .figure-set ol li img {
+  width: 100%;
+}
+
+figure .figure-set ol {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+figure .figure-set__container {
+  position: relative;
+  width: 80%;
+  align-self: center;
+}
+figure .figure-set__container button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(50%,-50%);
+}
+
+figure .figure-set ol,
+figure .figure-set ol li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 figcaption {
   font-family: "IM Fell English", serif;
   align-self: center;
-  transform: translateY(-2rem);
   margin-bottom: 3rem;
   width: 60%;
   text-align: center;
@@ -158,6 +198,7 @@ nav {
   transform: translateX(-50%);
 }
 
+button.nav,
 nav button {
   background: none;
   border: none;
@@ -168,23 +209,29 @@ nav button {
   padding: 0.3rem;
   cursor: pointer;
 }
+button.nav:disabled,
 nav button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
+button.nav span,
 nav button span {
   font-size: 1rem;
   text-shadow: #fff 2px 2px, #fff -2px -2px, #fff -2px 2px, #fff 2px -2px,
     #fff 2px 0px, #fff 0px -2px, #fff 0px 2px, #fff -2px 0px;
 }
 
+button.nav:active,
+button.nav:hover,
 nav button:active,
 nav button:hover {
   background-color: #49417d;
   color: #fff;
 }
 
+button.nav:active span,
+button.nav:hover span,
 nav button:active span,
 nav button:hover span {
   text-shadow: none;
@@ -197,12 +244,9 @@ nav button:hover span {
 
 /* Mobile */
 @media (max-width: 576px) {
+  button.nav span,
   nav button span {
     display: none;
-  }
-  figure video,
-  figure img {
-    width: 100%;
   }
 }
 

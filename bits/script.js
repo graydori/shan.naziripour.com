@@ -5,7 +5,7 @@ function gtag() {
 gtag("js", new Date());
 gtag("config", "UA-34564934-1");
 
-const max = document.getElementById("comics").childElementCount - 2;
+const max = document.getElementById("comics").childElementCount - 1;
 let current = max;
 if (location.hash) {
     const hash = parseInt(location.hash.substring(1));
@@ -252,10 +252,56 @@ app.component("figure-image", {
           return `Bits Comic: Number ${this.figureId}`;
       },
       source: function () {
-          return `img/${("0000" + this.figureId).slice(-4)}.${this.fileType}`;
+          return `img/${("0000" + this.figureId).slice(-4)}.${this.fileType ?? "png"}`;
       },
   },
   template: `<img v-lazyload-img class="loader" :data-url="source" :alt="alt" />`,
+});
+app.component("figure-set", {
+  props: {
+    figureId: String,
+    isFirstVideo: Boolean,
+    count: Number
+  },
+  data: function() {
+    return {
+      current: 0,
+    }
+  },
+  computed: {
+      style: function() {
+        return { width: `${this.count}00%` };
+      },
+      alt: function () {
+          return `Bits Comic: Number ${this.figureId}`;
+      },
+      sources: function () {
+        return Array(this.count)
+          .fill()
+          .map((c,i)=> ( i === 0 && this.isFirstVideo ? {
+            poster: `img/${("0000" + this.figureId).slice(-4)}.${i}.png`,
+            source: `img/${("0000" + this.figureId).slice(-4)}.${i}.mp4`,
+          }:{
+            source: `img/${("0000" + this.figureId).slice(-4)}.${i}.png`,
+          }));
+      },
+  },
+  methods: {
+    next: function () {
+      this.current++;
+      if (this.current >= this.count) {
+        this.current = 0; //reset
+      }
+      const newPos = this.$refs.set.clientWidth * this.current;
+      this.$refs.set.scrollTo(newPos,0)
+    }
+  },
+  template: `<div class="figure-set__container"><div class="figure-set" ref="set" ><ol :style="style">
+      <li v-for="source in sources">
+        <video v-if="source.poster" v-lazyload-video class="loader" :data-src="source.source" :data-poster="poster" :alt="alt" />
+        <img v-if="!source.poster" v-lazyload-img class="loader" :data-url="source.source" :alt="alt" />
+      </li>
+    </ol></div><button class="nav" type="button" v-on:click="next" >▶️ <span>Next</span></button></div>`,
 });
 app.component("figure-time", {
   props: ["title", "datetime"],
