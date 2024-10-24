@@ -106,7 +106,8 @@ dialog {
 }
 
 dialog:target {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 dialog:target ~ main {
@@ -147,6 +148,9 @@ main nav a[href="#me"] em::after {
 }
 main nav a[href="#art"] em::after {
   content: "🎨";
+}
+main nav a[href="#shows"] em::after {
+  content: "🎭";
 }
 main nav a[href="#dev"] em::after {
   content: "👾";
@@ -277,7 +281,7 @@ form.bubble input {
   outline: 0;
   flex-grow: 1;
   height: 1em;
-  min-height: 1em;
+  min-height: 1.4em;
   max-height: 4em;
   resize: vertical;
 }
@@ -290,6 +294,7 @@ form.bubble button {
   background: rgb(63, 144, 241);
   align-self: flex-end;
   justify-content: flex-end;
+  height: 23px;
 }
 
 form.bubble button img {
