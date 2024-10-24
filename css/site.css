@@ -4,13 +4,13 @@ body {
 }
 
 header {
-  min-height: 90vh;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 450px;
   margin: 0 auto;
-  font-size: 2em;
+  font-size: 1.8em;
   padding: 0 1rem;
 }
 
@@ -59,7 +59,7 @@ header p:nth-child(odd) {
 }
 
 h1 {
-  font-size: 4em;
+  font-size: 3em;
   background: url(../img/shan.naziripour.png) no-repeat bottom right;
   background-size: contain;
   margin: 0;
@@ -309,4 +309,22 @@ form.bubble button img {
   align-items: flex-start;
   grid-auto-columns: minmax(260px, 1fr);
   grid-auto-flow: dense;
+}
+
+
+.close {
+  cursor: pointer;
+  border-radius: 100%;
+  display: inline-block;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid black;
+  width: 28px;
+  text-align: center;
+}
+.close:hover {
+  background-color: white;
+  color: black;
 }
