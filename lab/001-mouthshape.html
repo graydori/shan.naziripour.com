@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Loading...</title>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        background: #f1f0ff;
+        color: #eee;
+        font-family: sans-serif;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .face-plate {
+        width: 280px;
+        height: 280px;
+        background: url("./001-mouthshape.svg") center / contain no-repeat;
+        margin: 0 auto;
+        position: relative;
+        border: 0;
+        cursor: pointer;
+        transition: transform 180ms ease, filter 180ms ease;
+      }
+
+      .face-plate:hover {
+        transform: translateY(-4px) scale(1.015);
+      }
+
+      .face-plate.playing {
+        animation: pulseGlow 1.2s ease-in-out infinite;
+      }
+
+      @keyframes pulseGlow {
+        0% {
+          filter: drop-shadow(0 0 0 rgba(123, 96, 208, 0));
+        }
+        50% {
+          filter: drop-shadow(0 0 14px rgba(123, 96, 208, 0.45));
+        }
+        100% {
+          filter: drop-shadow(0 0 0 rgba(123, 96, 208, 0));
+        }
+      }
+
+      .play-prompt-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(72, 63, 121, 0.86);
+        border: 2px solid rgba(246, 246, 246, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 140ms ease, transform 140ms ease;
+        z-index: 9;
+      }
+
+      .play-prompt-icon::before {
+        content: "";
+        margin-left: 4px;
+        width: 0;
+        height: 0;
+        border-top: 11px solid transparent;
+        border-bottom: 11px solid transparent;
+        border-left: 16px solid #f6f6f6;
+      }
+
+      .play-prompt-icon.visible {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      #audioSource {
+        display: none;
+      }
+
+      .playback-indicator {
+        position: fixed;
+        top: 10px;
+        left: 12px;
+        right: 12px;
+        color: #4d456b;
+        font-size: 12px;
+        font-weight: 700;
+        display: grid;
+        gap: 6px;
+        z-index: 15;
+      }
+
+      .time-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .time-row .playing-state {
+        color: #6d5fc1;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 8px;
+        border-radius: 999px;
+        background: #d9d3f2;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #6a58bc 0%, #8c79e2 100%);
+        transition: width 120ms linear;
+      }
+
+      @media (max-width: 640px) {
+        .playback-indicator {
+          top: 8px;
+          left: 8px;
+          right: 8px;
+        }
+      }
+
+      .caption {
+        position: relative;
+        max-width: min(82vw, 640px);
+        color: #483f79;
+        font-size: 14px;
+        line-height: 1.35;
+        padding: 10px 14px;
+        background: #f6f6f6;
+        border: 2px solid #483f79;
+        border-radius: 14px;
+        box-shadow: 0 6px 14px rgba(72, 63, 121, 0.16);
+        opacity: 0;
+        transform: translateY(8px) scale(0.86);
+        transform-origin: center top;
+        transition: opacity 140ms ease, transform 140ms ease;
+      }
+
+      .caption::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 15px solid #483f79;
+        transform: translateX(-50%);
+      }
+
+      .caption::after {
+        content: "";
+        position: absolute;
+        top: -11px;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 12px solid #f6f6f6;
+        transform: translateX(-50%);
+      }
+
+      .caption.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        animation: captionPop 360ms cubic-bezier(0.25, 1.35, 0.42, 1);
+      }
+
+      @keyframes captionPop {
+        0% {
+          transform: translateY(12px) scale(0.78, 1.16) rotate(-1.4deg);
+        }
+        45% {
+          transform: translateY(-3px) scale(1.05, 0.95) rotate(1deg);
+        }
+        75% {
+          transform: translateY(1px) scale(0.98, 1.02) rotate(-0.5deg);
+        }
+        100% {
+          transform: translateY(0) scale(1, 1) rotate(0deg);
+        }
+      }
+
+      .recorder-ui {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 40;
+      }
+
+      .embedded .recorder-ui {
+        display: none;
+      }
+
+      .tooltip-wrap {
+        position: relative;
+      }
+
+      .recorder-ui .tooltip-wrap:first-child {
+        flex: 1 1 auto;
+      }
+
+      .overlay-active .recorder-ui .tooltip-wrap:first-child {
+        pointer-events: none;
+        opacity: 0.55;
+      }
+
+      .tooltip-wrap::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%) translateY(3px);
+        background: #31264f;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 7px 9px;
+        border-radius: 8px;
+        white-space: nowrap;
+        max-width: min(80vw, 260px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms ease, transform 120ms ease;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      }
+
+      .tooltip-wrap:hover::after,
+      .tooltip-wrap:focus-within::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .recorder-ui .tooltip-wrap:first-child::after {
+        left: 0;
+        transform: translateY(3px);
+        white-space: normal;
+        text-align: left;
+      }
+
+      .recorder-ui .tooltip-wrap:first-child:hover::after,
+      .recorder-ui .tooltip-wrap:first-child:focus-within::after {
+        transform: translateY(0);
+      }
+
+      .recorder-ui .tooltip-wrap:last-child::after {
+        left: auto;
+        right: 0;
+        transform: translateY(3px);
+        white-space: nowrap;
+      }
+
+      .recorder-ui .tooltip-wrap:last-child:hover::after,
+      .recorder-ui .tooltip-wrap:last-child:focus-within::after {
+        transform: translateY(0);
+      }
+
+      #recordBtn {
+        order: 2;
+        flex: 0 0 auto;
+        border: 0;
+        border-radius: 999px;
+        width: 42px;
+        height: 42px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #ff5f57;
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      }
+
+      #recordBtn.recording {
+        background: #2f2f2f;
+      }
+
+      .record-icon {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        transition: all 120ms ease;
+      }
+
+      #recordBtn.recording .record-icon {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+      }
+
+      #shareUrl {
+        order: 1;
+        flex: 1 1 auto;
+        width: 100%;
+        border: 1px solid #d2cbe6;
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 12px;
+        color: #4d456b;
+        background: #fff;
+        cursor: copy;
+      }
+
+      #shareUrl.copied {
+        animation: copiedPop 320ms ease;
+        border-color: #7e6ad6;
+        box-shadow: 0 0 0 3px rgba(126, 106, 214, 0.16);
+      }
+
+      .copy-badge {
+        position: absolute;
+        left: 0;
+        bottom: calc(100% + 8px);
+        background: #6f5fbc;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 5px 9px;
+        opacity: 0;
+        transform: translateY(4px) scale(0.96);
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      .copy-badge.show {
+        animation: badgePop 560ms ease forwards;
+      }
+
+      .activity-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(35, 20, 12, 0.18);
+        backdrop-filter: blur(2px);
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 150ms ease;
+      }
+
+      .activity-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .overlay-chip {
+        background: rgba(32, 21, 50, 0.9);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 9px 14px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+        letter-spacing: 0.02em;
+      }
+
+      .activity-overlay.processing .overlay-chip {
+        animation: overlayPulse 900ms ease-in-out infinite;
+      }
+
+      @keyframes overlayPulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.95;
+        }
+        50% {
+          transform: scale(1.04);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.95;
+        }
+      }
+
+      @keyframes copiedPop {
+        0% {
+          transform: scale(1);
+        }
+        45% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes badgePop {
+        0% {
+          opacity: 0;
+          transform: translateY(4px) scale(0.96);
+        }
+        20% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        85% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-2px) scale(0.98);
+        }
+      }
+
+      .eyes {
+        position: absolute;
+        top: 45%;
+        left: 55%;
+        width: 155px;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .eye {
+        width: 55px;
+        height: 44px;
+        background: #f6f6f6;
+        border: 4px solid #483f79;
+        border-radius: 58% 58% 52% 52%;
+        overflow: hidden;
+        position: relative;
+        transform-origin: center;
+        transition: transform 90ms ease;
+      }
+
+      #leftEye {
+        transform: rotate(10deg);
+      }
+
+      #rightEye {
+        transform: rotate(-10deg);
+      }
+
+      .eye::after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.7);
+        pointer-events: none;
+      }
+
+      .pupil {
+        width: 30px;
+        height: 30px;
+        background: #483f79;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: transform 45ms linear;
+      }
+
+      .face-plate.blinking #leftEye {
+        transform: rotate(10deg) scaleY(0.08);
+      }
+
+      .face-plate.blinking #rightEye {
+        transform: rotate(-10deg) scaleY(0.08);
+      }
+
+      .mouth {
+        position: absolute;
+        top: 72%;
+        left: 55%;
+        transform: translate(-50%, -50%);
+        background-color: #483f79;
+        border-bottom: 3px solid #6e6899;
+        transition: all 0.15s cubic-bezier(0.47, 1.64, 0.41, 0.8);
+      }
+
+      .mouth::before,
+      .mouth::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+
+      .mouth.toon-x {
+        width: 52px;
+        height: 3px;
+        border-radius: 999px;
+        background-color: #6e6899;
+        border-bottom-width: 2px;
+      }
+
+      .mouth.toon-a {
+        width: 56px;
+        height: 14px;
+        border-radius: 999px;
+        background-color: #6e6899;
+        border-bottom-width: 3px;
+      }
+
+      .mouth.toon-b {
+        width: 58px;
+        height: 24px;
+        border-radius: 10px 10px 20px 20px;
+        background-color: #483f79;
+      }
+
+      .mouth.toon-b::before {
+        top: 3px;
+        width: 82%;
+        height: 8px;
+        border-radius: 4px;
+        background: #f6f6f6;
+      }
+
+      .mouth.toon-b::after {
+        bottom: 2px;
+        width: 55%;
+        height: 6px;
+        border-radius: 999px;
+        background: #6e6899;
+      }
+
+      .mouth.toon-c {
+        width: 78px;
+        height: 26px;
+        border-radius: 45% 45% 55% 55%;
+        background-color: #483f79;
+      }
+
+      .mouth.toon-c::before {
+        top: 3px;
+        width: 74%;
+        height: 7px;
+        border-radius: 4px;
+        background: #f6f6f6;
+      }
+
+      .mouth.toon-c::after {
+        bottom: 3px;
+        width: 46%;
+        height: 8px;
+        border-radius: 999px;
+        background: #6e6899;
+      }
+
+      .mouth.toon-d {
+        width: 72px;
+        height: 58px;
+        border-radius: 44% 44% 52% 52%;
+        background-color: #483f79;
+      }
+
+      .mouth.toon-d::before {
+        top: 4px;
+        width: 68%;
+        height: 10px;
+        border-radius: 5px;
+        background: #f6f6f6;
+      }
+
+      .mouth.toon-d::after {
+        bottom: 6px;
+        width: 40%;
+        height: 12px;
+        border-radius: 999px;
+        background: #6e6899;
+      }
+
+      .mouth.toon-e {
+        width: 50px;
+        height: 52px;
+        border-radius: 50%;
+        background-color: #483f79;
+      }
+
+      .mouth.toon-e::before {
+        top: 5px;
+        width: 54%;
+        height: 9px;
+        border-radius: 4px;
+        background: #f6f6f6;
+      }
+
+      .mouth.toon-e::after {
+        bottom: 6px;
+        width: 40%;
+        height: 11px;
+        border-radius: 999px;
+        background: #6e6899;
+      }
+
+      .mouth.toon-f {
+        width: 38px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: #483f79;
+        border-bottom-width: 2px;
+      }
+
+      .mouth.toon-g {
+        width: 64px;
+        height: 20px;
+        border-radius: 8px 8px 18px 18px;
+        background-color: #483f79;
+      }
+
+      .mouth.toon-g::before {
+        top: 2px;
+        width: 80%;
+        height: 10px;
+        border-radius: 3px;
+        background: #f6f6f6;
+        box-shadow: 0 1px 0 #6e6899;
+      }
+
+      .mouth.toon-x::before,
+      .mouth.toon-x::after,
+      .mouth.toon-a::before,
+      .mouth.toon-a::after,
+      .mouth.toon-f::before,
+      .mouth.toon-f::after,
+      .mouth.toon-g::after {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="face-plate">
+      <div id="playPromptIcon" class="play-prompt-icon" aria-hidden="true"></div>
+      <div class="eyes">
+        <div class="eye" id="leftEye"><div class="pupil"></div></div>
+        <div class="eye" id="rightEye"><div class="pupil"></div></div>
+      </div>
+      <div id="cssMouth" class="mouth toon-x"></div>
+    </div>
+
+    <div id="transcriptCaption" class="caption"></div>
+
+    <audio id="audioSource" crossorigin="anonymous" src="001-mouthshape.mp3"></audio>
+
+    <div class="playback-indicator">
+      <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+      <div class="time-row">
+        <span id="playState" class="playing-state">Ready</span>
+        <span id="timeLabel">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <div class="recorder-ui">
+      <div class="tooltip-wrap" data-tooltip="Click to copy current URL">
+        <input id="shareUrl" type="text" readonly placeholder="Recorded clip URL appears here" title="Click to copy current URL" />
+        <span id="copyBadge" class="copy-badge" aria-hidden="true">Copied!</span>
+      </div>
+      <div id="recordTooltipWrap" class="tooltip-wrap" data-tooltip="Start recording">
+        <button id="recordBtn" type="button" aria-label="Start recording" title="Start recording">
+          <span class="record-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <div id="activityOverlay" class="activity-overlay" aria-hidden="true">
+      <div id="overlayChip" class="overlay-chip">Recording...</div>
+    </div>
+
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+      import { Lipsync } from "https://cdn.jsdelivr.net/npm/wawa-lipsync@0.0.2/+esm";
+
+      const audioEl = document.getElementById("audioSource");
+      const mouthDiv = document.getElementById("cssMouth");
+      const facePlate = document.querySelector(".face-plate");
+      const playPromptIconEl = document.getElementById("playPromptIcon");
+      const recordBtn = document.getElementById("recordBtn");
+      const shareUrlInput = document.getElementById("shareUrl");
+      const playStateEl = document.getElementById("playState");
+      const timeLabelEl = document.getElementById("timeLabel");
+      const progressFillEl = document.getElementById("progressFill");
+      const transcriptCaptionEl = document.getElementById("transcriptCaption");
+      const copyBadgeEl = document.getElementById("copyBadge");
+      const recordTooltipWrapEl = document.getElementById("recordTooltipWrap");
+      const activityOverlayEl = document.getElementById("activityOverlay");
+      const overlayChipEl = document.getElementById("overlayChip");
+      const eyes = [...document.querySelectorAll(".eye")];
+      const pupils = [...document.querySelectorAll(".pupil")];
+
+      const visemeToCssMap = {
+        viseme_sil: "toon-x",
+        viseme_PP: "toon-a",
+        viseme_FF: "toon-g",
+        viseme_TH: "toon-b",
+        viseme_DD: "toon-b",
+        viseme_kk: "toon-b",
+        viseme_CH: "toon-b",
+        viseme_SS: "toon-b",
+        viseme_nn: "toon-b",
+        viseme_RR: "toon-b",
+        viseme_aa: "toon-d",
+        viseme_E: "toon-c",
+        viseme_I: "toon-c",
+        viseme_O: "toon-e",
+        viseme_U: "toon-f",
+        viseme_aaa: "toon-d",
+      };
+
+      const SUPABASE_URL = "https://xszcnphasjyszxwxftgw.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzemNucGhhc2p5c3p4d3hmdGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMzksImV4cCI6MjA4NzcwMjMzOX0.tjH9MVmAFtG5C8XCf-pq1WQ_l66pLANaHvR53aAbV4I";
+      const SUPABASE_BUCKET = "audio-clips";
+
+      const MAX_SHARE_URL_LENGTH = 1800;
+      const TAP_TO_PLAY_TEXT = "Ready (tap face to play)";
+      const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const isEmbedded = (() => {
+        try {
+          return window.self !== window.top;
+        } catch {
+          return true;
+        }
+      })();
+
+      if (isEmbedded) document.body.classList.add("embedded");
+
+      const isSupabaseConfigured =
+        SUPABASE_URL.startsWith("https://") &&
+        !SUPABASE_URL.includes("YOUR_PROJECT_ID") &&
+        SUPABASE_ANON_KEY &&
+        !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE_ANON_KEY");
+
+      const supabase = isSupabaseConfigured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+      const lipsync = new Lipsync();
+      let isRunning = false;
+      let lastCssClass = "toon-x";
+      let mediaRecorder = null;
+      let recordingChunks = [];
+      let isRecording = false;
+      let currentObjectUrl = null;
+      let currentTranscript = "";
+      let speechRecognition = null;
+      let transcriptFinalText = "";
+
+      function setPlayStateText(value) {
+        playStateEl.textContent = value;
+        playPromptIconEl.classList.toggle("visible", /tap face to play/i.test(value));
+      }
+
+      async function tryPlayAudio() {
+        try {
+          await audioEl.play();
+          return true;
+        } catch {
+          setPlayStateText(TAP_TO_PLAY_TEXT);
+          return false;
+        }
+      }
+
+      function sanitizeTranscript(value) {
+        return (value || "").replace(/\s+/g, " ").trim();
+      }
+
+      function setTranscript(value) {
+        currentTranscript = sanitizeTranscript(value);
+        transcriptCaptionEl.textContent = currentTranscript;
+        document.title = currentTranscript || "LipSync Demo";
+        updateCaptionVisibility();
+      }
+
+      function updateCaptionVisibility() {
+        transcriptCaptionEl.classList.toggle("visible", !audioEl.paused && Boolean(currentTranscript));
+      }
+
+      function syncShareInputToCurrentUrl() {
+        shareUrlInput.value = window.location.href;
+      }
+
+      function setRecordButtonState(recording) {
+        const tooltip = recording ? "Stop recording" : "Start recording";
+        recordBtn.setAttribute("aria-label", tooltip);
+        recordBtn.title = tooltip;
+        recordTooltipWrapEl.setAttribute("data-tooltip", tooltip);
+      }
+
+      function setRecordingUiState(recording) {
+        isRecording = recording;
+        recordBtn.classList.toggle("recording", recording);
+        setRecordButtonState(recording);
+      }
+
+      function setOverlayState(state) {
+        const active = Boolean(state);
+        activityOverlayEl.classList.toggle("active", active);
+        activityOverlayEl.classList.toggle("processing", state === "processing");
+        document.body.classList.toggle("overlay-active", active);
+        overlayChipEl.textContent = state === "processing" ? "Processing..." : "Recording...";
+      }
+
+      function formatTime(seconds) {
+        if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+        const total = Math.floor(seconds);
+        const mins = Math.floor(total / 60);
+        const secs = String(total % 60).padStart(2, "0");
+        return `${mins}:${secs}`;
+      }
+
+      function updatePlaybackIndicator() {
+        const duration = Number.isFinite(audioEl.duration) ? audioEl.duration : 0;
+        const current = Number.isFinite(audioEl.currentTime) ? audioEl.currentTime : 0;
+        const pct = duration > 0 ? Math.min((current / duration) * 100, 100) : 0;
+        timeLabelEl.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        progressFillEl.style.width = `${pct}%`;
+      }
+
+      function setAudioSourceFromBlob(blob) {
+        if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = URL.createObjectURL(blob);
+        audioEl.src = currentObjectUrl;
+      }
+
+      function fileExtensionForMimeType(mimeType) {
+        if (mimeType.includes("ogg")) return "ogg";
+        if (mimeType.includes("mp4")) return "m4a";
+        if (mimeType.includes("mpeg")) return "mp3";
+        if (mimeType.includes("wav")) return "wav";
+        return "webm";
+      }
+
+      function buildShareUrl(filePath, transcript = "") {
+        const current = new URL(window.location.href);
+        const fileName = filePath.includes("/") ? filePath.split("/").pop() : filePath;
+        current.searchParams.set("clip", fileName);
+        current.searchParams.delete("audioUrl");
+        current.searchParams.delete("t");
+
+        const clean = sanitizeTranscript(transcript);
+        if (!clean) return current.toString();
+
+        let low = 0;
+        let high = clean.length;
+        let best = "";
+
+        while (low <= high) {
+          const mid = Math.floor((low + high) / 2);
+          let candidate = clean.slice(0, mid).trim();
+          if (mid < clean.length && candidate.length > 0) candidate += "...";
+
+          const testUrl = new URL(current);
+          testUrl.searchParams.set("t", candidate);
+
+          if (testUrl.toString().length <= MAX_SHARE_URL_LENGTH) {
+            best = candidate;
+            low = mid + 1;
+          } else {
+            high = mid - 1;
+          }
+        }
+
+        if (best) current.searchParams.set("t", best);
+        return current.toString();
+      }
+
+      function getPublicAudioUrl(filePath) {
+        const { data: publicData } = supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(filePath);
+        if (!publicData?.publicUrl) throw new Error("Failed to build public URL for uploaded recording.");
+        return publicData.publicUrl;
+      }
+
+      async function uploadRecordingToSupabase(blob) {
+        if (!supabase) throw new Error("Supabase not configured.");
+
+        const extension = fileExtensionForMimeType(blob.type || "audio/webm");
+        const filePath = `recordings/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from(SUPABASE_BUCKET)
+          .upload(filePath, blob, { contentType: blob.type || "audio/webm", upsert: false });
+
+        if (uploadError) throw uploadError;
+        return filePath;
+      }
+
+      async function setAudioFromUrlParam() {
+        const params = new URLSearchParams(window.location.search);
+        const clipPath = params.get("clip");
+        const audioUrl = params.get("audioUrl");
+        setTranscript(params.get("t") || "");
+
+        if (!clipPath && !audioUrl) return false;
+
+        if (clipPath) {
+          if (!supabase) return false;
+          const normalizedPath = clipPath.includes("/") ? clipPath : `recordings/${clipPath}`;
+          audioEl.src = getPublicAudioUrl(normalizedPath);
+        } else {
+          audioEl.src = audioUrl;
+        }
+
+        syncShareInputToCurrentUrl();
+        return true;
+      }
+
+      function startSpeechRecognition() {
+        if (!SpeechRecognitionCtor) return;
+
+        speechRecognition = new SpeechRecognitionCtor();
+        speechRecognition.continuous = true;
+        speechRecognition.interimResults = true;
+        speechRecognition.lang = "en-US";
+        speechRecognition.onresult = (event) => {
+          let appended = "";
+          for (let i = event.resultIndex; i < event.results.length; i += 1) {
+            const result = event.results[i];
+            if (result.isFinal) appended += ` ${result[0].transcript}`;
+          }
+          if (appended) transcriptFinalText = sanitizeTranscript(`${transcriptFinalText} ${appended}`);
+        };
+        speechRecognition.onerror = () => {};
+        speechRecognition.start();
+      }
+
+      function stopSpeechRecognition() {
+        if (!speechRecognition) return;
+        try {
+          speechRecognition.stop();
+        } catch {}
+        speechRecognition = null;
+      }
+
+      function restartClassAnimation(element, className) {
+        element.classList.remove(className);
+        void element.offsetWidth;
+        element.classList.add(className);
+      }
+
+      async function startRecording() {
+        if (!navigator.mediaDevices?.getUserMedia) return;
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          transcriptFinalText = "";
+          setTranscript("");
+          recordingChunks = [];
+
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) recordingChunks.push(event.data);
+          };
+
+          mediaRecorder.onstop = async () => {
+            setOverlayState("processing");
+            const blob = new Blob(recordingChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+            setAudioSourceFromBlob(blob);
+
+            try {
+              const filePath = await uploadRecordingToSupabase(blob);
+              audioEl.src = getPublicAudioUrl(filePath);
+              const shareUrl = buildShareUrl(filePath, transcriptFinalText);
+              window.history.replaceState({}, "", shareUrl);
+              syncShareInputToCurrentUrl();
+              setTranscript(new URL(shareUrl).searchParams.get("t") || "");
+            } catch {
+              syncShareInputToCurrentUrl();
+            } finally {
+              audioEl.currentTime = 0;
+              setOverlayState(null);
+              await tryPlayAudio();
+            }
+
+            stream.getTracks().forEach((track) => track.stop());
+          };
+
+          mediaRecorder.start();
+          startSpeechRecognition();
+
+          setRecordingUiState(true);
+          setOverlayState("recording");
+        } catch {}
+      }
+
+      function stopRecording() {
+        if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+        stopSpeechRecognition();
+        mediaRecorder.stop();
+        setRecordingUiState(false);
+      }
+
+      function movePupil(pupilEl, eyeEl, cursorX, cursorY) {
+        const rect = eyeEl.getBoundingClientRect();
+        const eyeCenterX = rect.left + rect.width / 2;
+        const eyeCenterY = rect.top + rect.height / 2;
+        const dx = cursorX - eyeCenterX;
+        const dy = cursorY - eyeCenterY;
+        const distance = Math.hypot(dx, dy);
+        const maxOffset = 7;
+        const clamped = distance > maxOffset ? maxOffset / distance : 1;
+        pupilEl.style.transform = `translate(-50%, -50%) translate(${dx * clamped}px, ${dy * clamped}px)`;
+      }
+
+      function blinkOnce() {
+        facePlate.classList.add("blinking");
+        window.setTimeout(() => facePlate.classList.remove("blinking"), 120);
+      }
+
+      function scheduleBlink() {
+        const nextBlinkMs = 1800 + Math.random() * 3400;
+        window.setTimeout(() => {
+          blinkOnce();
+          if (Math.random() < 0.25) window.setTimeout(blinkOnce, 150);
+          scheduleBlink();
+        }, nextBlinkMs);
+      }
+
+      function animate() {
+        lipsync.processAudio();
+        const raw = lipsync.viseme;
+        const targetCssClass = visemeToCssMap[raw] || "toon-x";
+        if (targetCssClass !== lastCssClass) {
+          mouthDiv.className = `mouth ${targetCssClass}`;
+          lastCssClass = targetCssClass;
+        }
+        requestAnimationFrame(animate);
+      }
+
+      audioEl.onplay = () => {
+        facePlate.classList.add("playing");
+        setPlayStateText("Playing");
+        updateCaptionVisibility();
+        if (!isRunning) {
+          lipsync.connectAudio(audioEl);
+          isRunning = true;
+          animate();
+        }
+      };
+
+      audioEl.onpause = () => {
+        facePlate.classList.remove("playing");
+        setPlayStateText("Paused");
+        updateCaptionVisibility();
+      };
+
+      audioEl.onended = () => {
+        facePlate.classList.remove("playing");
+        setPlayStateText("Ended");
+        updatePlaybackIndicator();
+        updateCaptionVisibility();
+      };
+
+      audioEl.addEventListener("loadedmetadata", updatePlaybackIndicator);
+      audioEl.addEventListener("timeupdate", updatePlaybackIndicator);
+
+      recordBtn.addEventListener("click", async () => {
+        if (isRecording) {
+          stopRecording();
+          return;
+        }
+        await startRecording();
+      });
+
+      shareUrlInput.addEventListener("click", async () => {
+        shareUrlInput.focus();
+        shareUrlInput.select();
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          restartClassAnimation(shareUrlInput, "copied");
+          restartClassAnimation(copyBadgeEl, "show");
+          window.setTimeout(() => {
+            shareUrlInput.classList.remove("copied");
+            copyBadgeEl.classList.remove("show");
+          }, 700);
+        } catch {}
+      });
+
+      facePlate.addEventListener("click", async () => {
+        if (audioEl.paused) {
+          if (audioEl.ended) audioEl.currentTime = 0;
+          await tryPlayAudio();
+          return;
+        }
+        audioEl.pause();
+      });
+
+      window.addEventListener("mousemove", (event) => {
+        for (let i = 0; i < pupils.length; i += 1) {
+          movePupil(pupils[i], eyes[i], event.clientX, event.clientY);
+        }
+      });
+
+      scheduleBlink();
+      await setAudioFromUrlParam();
+      syncShareInputToCurrentUrl();
+      setRecordingUiState(false);
+      setOverlayState(null);
+      updatePlaybackIndicator();
+      window.addEventListener("popstate", syncShareInputToCurrentUrl);
+
+      window.addEventListener("load", async () => {
+        await tryPlayAudio();
+      });
+    </script>
+  </body>
+</html>
