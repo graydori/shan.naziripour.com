@@ -161,6 +161,9 @@ main nav a[href="#give"] em::after {
 main nav a[href="#cv"] em::after {
   content: "📄";
 }
+main nav a[href="#act"] em::after {
+  content: "🎬";
+}
 main nav a[href="#faq"] em::after {
   content: "⁉️";
 }
@@ -327,4 +330,32 @@ form.bubble button img {
 .close:hover {
   background-color: white;
   color: black;
+}
+
+
+.pdf-viewer[aria-busy="true"]::before {
+  content: "Loading PDF...";
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: #5a4f92;
+}
+
+.pdf-page {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.pdf-page canvas {
+  display: block;
+}
+
+.pdf-error {
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0;
+  text-align: left;
 }

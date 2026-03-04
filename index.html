@@ -16,7 +16,7 @@
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
   <!-- CSS -->
-  <link href="css/site.css?_t=20241024" rel="stylesheet" type="text/css" />
+  <link href="css/site.css?_t=20260304" rel="stylesheet" type="text/css" />
   <!-- Full Story -->
   <script>
     window['_fs_debug'] = false;
@@ -25,7 +25,7 @@
     window['_fs_org'] = '198R12';
     window['_fs_namespace'] = 'FS';
     (function(m,n,e,t,l,o,g,y){
-        if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
+        if (e in m) {return;}
         g=m[e]=function(a,b,s){g.q?g.q.push([a,b,s]):g._api(a,b,s);};g.q=[];
         o=n.createElement(t);o.async=1;o.crossOrigin='anonymous';o.src='https://'+_fs_script;
         y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
@@ -372,8 +372,27 @@
         </div>
         <div class="row">
           <div class="col">
-            <iframe src="https://v2-embednotion.com/13a4843b8daf46848eb4d96ac77ec930" width="100%" height="2200px" frameborder="0" style="border:0;"></iframe>
-            <p>Can't see the Resume? Check out this <a target="_blank" href="https://2-excited.notion.site/Shan-Naziripour-13a4843b8daf46848eb4d96ac77ec930">Engineering Leader</a>.</p>
+            <div id="cvPdfViewer" class="pdf-viewer" data-pdf-src="files/ShanNaziripour-SoftwareEngineer(2026).pdf" aria-busy="false"></div>
+            <p>Can't see the Resume? Check out this <a target="_blank" href="files/ShanNaziripour-SoftwareEngineer(2026).pdf">Engineering Leader</a>.</p>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="act">
+      <div class="container-fluid">
+        <div class="row">
+          <nav class="navbar col">
+            <h2 class="navbar-brand mb-0 mr-auto">Acting Resume</h2>
+            <a href="#" class="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </a>
+          </nav>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div id="actPdfViewer" class="pdf-viewer" data-pdf-src="files/ShanNaziripour-Acting(2026).pdf" aria-busy="false"></div>
+            <p>Can't see the Acting Resume? Check out this <a target="_blank" href="files/ShanNaziripour-Acting(2026).pdf">Actor</a>.</p>
           </div>
         </div>
       </div>
@@ -391,6 +410,14 @@
         </div>
         <div class="row">
           <div class="grid-container">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">BC Radical Faeries</h5>
+                <p class="card-text">Board member at-large of a community organization that supports queer folx in BC.</p>
+                <p class="card-text"><small class="text-muted">2026</small></p>
+                <a href="https://bcradfae.ca/" class="btn btn-primary">Join</a>
+              </div>
+            </div>
             <div class="card">
               <img src="img/give/qtbipoc.jpg" class="card-img-top" alt="QDBIPOC">
               <div class="card-body">
@@ -512,6 +539,10 @@
             <em>CV</em>
             <span>Review my resume</span>
           </a>
+          <a href="#act">
+            <em>ACT</em>
+            <span>Review my acting</span>
+          </a>
           <a href="#art">
             <em>ART</em>
             <span>See some of my artistic side</span>
@@ -522,6 +553,79 @@
           </a>
       </nav>
     </main>
+  <script type="module">
+    import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs";
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.worker.min.mjs";
+
+    const pdfConfigs = [
+      { hash: "#cv", viewerId: "cvPdfViewer" },
+      { hash: "#act", viewerId: "actPdfViewer" }
+    ];
+
+    const renderedViewers = new Set();
+
+    function getViewerScale(viewerEl, page) {
+      const baseViewport = page.getViewport({ scale: 1 });
+      const viewerPadding = 24;
+      const availableWidth = Math.max(320, viewerEl.clientWidth - viewerPadding);
+      return availableWidth / baseViewport.width;
+    }
+
+    async function renderPdfIntoViewer(viewerEl) {
+      if (!viewerEl) return;
+      if (renderedViewers.has(viewerEl.id)) return;
+
+      const pdfSrc = viewerEl.getAttribute("data-pdf-src");
+      if (!pdfSrc) return;
+
+      viewerEl.setAttribute("aria-busy", "true");
+
+      try {
+        const loadingTask = pdfjsLib.getDocument(pdfSrc);
+        const pdfDoc = await loadingTask.promise;
+
+        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum += 1) {
+          const page = await pdfDoc.getPage(pageNum);
+          const scale = getViewerScale(viewerEl, page);
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+
+          await page.render({
+            canvasContext: context,
+            viewport
+          }).promise;
+
+          const pageWrapper = document.createElement("div");
+          pageWrapper.className = "pdf-page";
+          pageWrapper.appendChild(canvas);
+          viewerEl.appendChild(pageWrapper);
+        }
+
+        renderedViewers.add(viewerEl.id);
+      } catch {
+        viewerEl.innerHTML = '<p class="pdf-error">Unable to render PDF in-browser. Please use the download link below.</p>';
+      } finally {
+        viewerEl.setAttribute("aria-busy", "false");
+      }
+    }
+
+    function renderActiveDialogPdf() {
+      const currentHash = window.location.hash;
+      const activeConfig = pdfConfigs.find((config) => config.hash === currentHash);
+      if (!activeConfig) return;
+
+      const viewerEl = document.getElementById(activeConfig.viewerId);
+      renderPdfIntoViewer(viewerEl);
+    }
+
+    window.addEventListener("hashchange", renderActiveDialogPdf);
+    window.addEventListener("DOMContentLoaded", renderActiveDialogPdf);
+  </script>
   <!-- Google Analtyics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-34564934-1"></script>
   <script>
