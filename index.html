@@ -713,6 +713,27 @@
       setTimeout(loadCalendarEvents, 500);
     }
   </script>
+
+  <!-- URL Parameter to Dialog Mapper -->
+  <script>
+    (function handleUrlParams() {
+      
+      // Check for URL parameters on page load
+      const dialogIds = Array.from(document.getElementsByTagName('dialog')).map(el => el.id);
+      const params = new URLSearchParams(window.location.search);
+      
+      // Check if any query param matches a dialog ID
+      for (const dialogId of dialogIds) {
+        if (params.has(dialogId)) {
+          // Set hash to open the dialog
+          window.location.hash = `#${dialogId}`;
+          // Clean up the URL by removing query params and keeping just the hash
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+          break;
+        }
+      }
+    })();
+  </script>
 </body>
 
 </html>
