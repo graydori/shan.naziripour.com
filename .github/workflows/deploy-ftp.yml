@@ -23,5 +23,5 @@ jobs:
           port: ${{ secrets.SFTP_PORT || 22 }}
           local_path: ./
           remote_path: /shan.naziripour.com/
-          delete: false
+          delete_remote_files: false
 
