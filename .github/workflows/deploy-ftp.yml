@@ -19,7 +19,7 @@ jobs:
         with:
           remote-host: ${{ secrets.SFTP_SERVER }}
           remote-user: ${{ secrets.SFTP_USERNAME }}
-          emote-password: ${{ secrets.SFTP_PASSWORD }}
+          remote-password: ${{ secrets.SFTP_PASSWORD }}
           local-path: "./"
           remote-path: "/home/graydori/shan.naziripour.com/"
           sync: "full"
