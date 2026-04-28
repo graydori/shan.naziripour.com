@@ -17,7 +17,7 @@ jobs:
       - name: Deploy to SFTP
         uses: Creepios/sftp-action@v1.0.5
         with:
-          host: ${{ secrets.SFTP_SERVER }}
+          host: 'iad1-shared-e1-31.dreamhost.com'
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           localPath: './'
