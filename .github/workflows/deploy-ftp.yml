@@ -22,7 +22,7 @@ jobs:
           server: ${{ secrets.SFTP_SERVER }}
           port: ${{ secrets.SFTP_PORT || 22 }}
           local_path: './*'
-          remote_path: '/home/graydori/shan.naziripour.com/'
+          remote_path: '/home/graydori/shan.naziripour.com'
           sftp_only: true
           delete_remote_files: false
 
