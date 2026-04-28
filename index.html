@@ -93,6 +93,7 @@
       <div id="calendarEvents" style="flex-grow:1; padding-left: 16px;">
         <p>Loading events...</p>
       </div>
+      <div><i>Subscribe to the <a href="https://calendar.google.com/calendar/embed?src=7de99f9c3560c8c989bb513d5bce3b5dadd22130245a8fd8c77b02ff710b4275%40group.calendar.google.com&ctz=America%2FLos_Angeles" target="_blank" rel="noopener noreferrer">calendar</a></i></div>
     </dialog>
 
     <dialog id="art">
@@ -695,8 +696,8 @@
           <div style="margin-bottom: 16px;">
             <h5>${summary}</h5>
             <div style="border-top: 3px solid; padding-top: 8px;"></div>
-              ${startTime.toLocaleDateString()} at ${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-              <div style="color: #6c757d;">${location}</div>
+              📆 ${startTime.toLocaleDateString()} @ ${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              <div style="color: #6c757d;">📍 ${location}</div>
               <div>${event.description || ''}</div>
             </div>
           </div>
