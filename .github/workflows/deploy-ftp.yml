@@ -15,15 +15,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to SFTP
-        uses: Dylan700/sftp-upload-action@latest
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          server: ${{ secrets.SFTP_SERVER }}
-          port: ${{ secrets.SFTP_PORT || 22 }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          uploads: |
-            ./ => /home/graydori/shan.naziripour.com/
-          ignore: |
-            *.git
-            */**/*git*
+          server: ${{ secrets.SFTP_SERVER }}
+          port: ${{ secrets.SFTP_PORT || 22 }}
+          local_path: './*'
+          remote_path: '/home/graydori/shan.naziripour.com/'
+          sftp_only: true
+          delete_remote_files: false
 
