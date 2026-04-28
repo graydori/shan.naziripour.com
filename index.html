@@ -83,16 +83,16 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Shows</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">Shows with Shan</h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
           </nav>
         </div>
       </div>
-      <iframe 
-        src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=America%2FLos_Angeles&showNav=0&showTitle=0&showDate=0&showCalendars=0&showTz=1&showTabs=0&showPrint=0&mode=AGENDA&src=N2RlOTlmOWMzNTYwYzhjOTg5YmI1MTNkNWJjZTNiNWRhZGQyMjEzMDI0NWE4ZmQ4Yzc3YjAyZmY3MTBiNDI3NUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23B39DDB" 
-        style="border-width:0;flex-grow:1;" width="100%" height="200" frameborder="0" scrolling="no"></iframe>
+      <div id="calendarEvents" style="flex-grow:1; padding-left: 16px;">
+        <p>Loading events...</p>
+      </div>
     </dialog>
 
     <dialog id="art">
@@ -634,6 +634,84 @@
     gtag('js', new Date());
 
     gtag('config', 'UA-34564934-1');
+  </script>
+  <!-- Google Calendar API Integration -->
+  <script>
+    const CALENDAR_ID = '7de99f9c3560c8c989bb513d5bce3b5dadd22130245a8fd8c77b02ff710b4275@group.calendar.google.com';
+    const API_KEY = 'AIzaSyDJPrpVHzZa2DyXhkBvezIk41InF6eF7Ic';
+
+    async function loadCalendarEvents() {
+      const container = document.getElementById('calendarEvents');
+      
+      try {
+        // Try using the public Google Calendar API (works if calendar is public)
+        const now = new Date().toISOString();
+        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${now}&maxResults=10&singleEvents=true&orderBy=startTime&timeZone=America/Los_Angeles`;
+        
+        console.log('Attempting to fetch calendar events...');
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Calendar API Error:', response.status, errorData);
+          throw new Error(`API Error ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
+        }
+        
+        const data = await response.json();
+        const events = data.items || [];
+        
+        if (events.length === 0) {
+          container.innerHTML = '<p style="padding: 16px;">No upcoming shows 😢</p>';
+        } else {
+          displayCalendarEvents(events);
+        }
+      } catch (error) {
+        console.error('Failed to load calendar events:', error);
+        displayCalendarError(error.message);
+      }
+    }
+
+    function displayCalendarEvents(events) {
+      const container = document.getElementById('calendarEvents');
+      let html = '<div style="padding: 0;">';
+      
+      events.forEach(event => {
+        const startTime = new Date(event.start.dateTime || event.start.date);
+        const summary = event.summary || 'Untitled Event';
+        const location = event.location ? `${event.location}` : '';
+        
+        html += `
+          <div style="margin-bottom: 16px;">
+            <h5>${summary}</h5>
+            <div style="border-top: 3px solid; padding-top: 8px;"></div>
+              ${startTime.toLocaleDateString()} at ${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              <div style="color: #6c757d;">${location}</div>
+              <div>${event.description || ''}</div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      
+      container.innerHTML = html;
+    }
+
+    function displayCalendarError(errorMessage) {
+      const container = document.getElementById('calendarEvents');
+      container.innerHTML = `
+        <div style="padding: 16px;">
+          <p style="color: #d9534f; margin-bottom: 12px;"><strong>Unable to load <a href='https://calendar.google.com/calendar/embed?src=7de99f9c3560c8c989bb513d5bce3b5dadd22130245a8fd8c77b02ff710b4275%40group.calendar.google.com&ctz=America%2FLos_Angeles'>shows</a></strong> ${errorMessage}</p>
+        </div>`;
+    }
+
+    // Load events when the page is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(loadCalendarEvents, 500);
+      });
+    } else {
+      setTimeout(loadCalendarEvents, 500);
+    }
   </script>
 </body>
 
