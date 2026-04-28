@@ -22,4 +22,5 @@ jobs:
           emote-password: ${{ secrets.SFTP_PASSWORD }}
           local-path: "./"
           remote-path: "/home/graydori/shan.naziripour.com/"
+          sync: "full"
           debug: true
