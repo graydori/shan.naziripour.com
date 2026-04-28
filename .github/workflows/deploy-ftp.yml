@@ -15,10 +15,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to SFTP
-        uses: SamKirkland/web-deploy@v1
+        uses: Creepios/sftp-action@v1.0.5
         with:
-          target-server: ${{ secrets.SFTP_SERVER }}
-          remote-user: ${{ secrets.SFTP_USERNAME }}
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          source-path: ./
-          destination-path: /home/graydori/shan.naziripour.com/
+          localPath: './'
+          remotePath: '/home/graydori/shan.naziripour.com/'
