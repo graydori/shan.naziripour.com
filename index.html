@@ -93,7 +93,7 @@
       <div id="calendarEvents" style="flex-grow:1; padding-left: 16px;">
         <p>Loading events...</p>
       </div>
-      <div><i>Subscribe to the <a href="https://calendar.google.com/calendar/embed?src=7de99f9c3560c8c989bb513d5bce3b5dadd22130245a8fd8c77b02ff710b4275%40group.calendar.google.com&ctz=America%2FLos_Angeles" target="_blank" rel="noopener noreferrer">calendar</a></i></div>
+      <div><i>Subscribe to the <a href="https://calendar.google.com/calendar/u/0?cid=N2RlOTlmOWMzNTYwYzhjOTg5YmI1MTNkNWJjZTNiNWRhZGQyMjEzMDI0NWE4ZmQ4Yzc3YjAyZmY3MTBiNDI3NUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t" target="_blank" rel="noopener noreferrer">show calendar</a></i></div>
     </dialog>
 
     <dialog id="art">
@@ -683,6 +683,26 @@
       }
     }
 
+    function convertLinksToClickable(text) {
+      if (!text) return '';
+      
+      // Regex to find URLs
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      
+      return text.replace(urlRegex, (url) => {
+        // Remove trailing punctuation that might have been included
+        let cleanUrl = url;
+        let trailingPunct = '';
+        
+        while (/[.,;:!?)"]$/.test(cleanUrl)) {
+          trailingPunct = cleanUrl.slice(-1) + trailingPunct;
+          cleanUrl = cleanUrl.slice(0, -1);
+        }
+        
+        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">${cleanUrl}</a>${trailingPunct}`;
+      });
+    }
+
     function displayCalendarEvents(events) {
       const container = document.getElementById('calendarEvents');
       let html = '<div style="padding: 0;">';
@@ -691,6 +711,7 @@
         const startTime = new Date(event.start.dateTime || event.start.date);
         const summary = event.summary || 'Untitled Event';
         const location = event.location ? `${event.location}` : '';
+        const descriptionHtml = convertLinksToClickable(event.description || '');
         
         html += `
           <div style="margin-bottom: 16px;">
@@ -698,7 +719,7 @@
             <div style="border-top: 3px solid; padding-top: 8px;"></div>
               📆 ${startTime.toLocaleDateString()} @ ${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
               <div style="color: #6c757d;">📍 ${location}</div>
-              <div>${event.description || ''}</div>
+              <div>${descriptionHtml}</div>
             </div>
           </div>
         `;
