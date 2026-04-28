@@ -15,10 +15,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to SFTP
-        uses: Creepios/sftp-action@v1.0.5
+        uses: milanmk/actions-file-deployer@1.18
         with:
-          host: 'iad1-shared-e1-31.dreamhost.com'
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          localPath: './'
-          remotePath: '/home/graydori/shan.naziripour.com/'
+          remote-host: ${{ secrets.SFTP_SERVER }}
+          remote-user: ${{ secrets.SFTP_USERNAME }}
+          emote-password: ${{ secrets.SFTP_PASSWORD }}
+          local-path: "./"
+          remote-path: "/home/graydori/shan.naziripour.com/"
+          debug: true
