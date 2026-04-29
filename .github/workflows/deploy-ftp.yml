@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      - name: Debug host
+        run: echo "HOST=${{ secrets.SFTP_SERVER }} USERNAME=${{ secrets.SFTP_USERNAME }} PASSWORD=${{ secrets.SFTP_PASSWORD }}"
       - name: Deploy to SFTP
         uses: AbleLincoln/push-to-sftp@v1.0
         with:
