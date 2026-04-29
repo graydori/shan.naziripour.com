@@ -22,4 +22,4 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
           uploads: |
-          ./ => ./home/graydori/shan.naziripour.com/
+            ./ => ./home/graydori/shan.naziripour.com/
