@@ -1,6 +1,14 @@
 body {
-  background: #ed6a5a;
+  background: #005cff;
   font-family: "Work Sans", sans-serif;
+}
+
+a:hover {
+  color: #ff00db;
+}
+
+a:active, a:focus {
+  color: #00ff24;
 }
 
 header {
