@@ -1,6 +1,6 @@
 body {
   background: #005cff;
-  font-family: "Work Sans", sans-serif;
+  font-family: "Helvetica", sans-serif;
 }
 
 a:hover {
@@ -91,18 +91,8 @@ h1 small {
 h1 {
   font-family: "Knewave", cursive;
 }
-
-h2,
-h3,
-h4,
-h5 {
-  font-family: "Concert One", cursive;
-  text-transform: uppercase;
-}
-
-h3,
-h4 {
-  border-top: 5px solid;
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
 }
 
 dialog {
@@ -111,6 +101,11 @@ dialog {
   background: #fff;
   min-height: 100vh;
   border: 0;
+}
+
+/* Change body background when any dialog is targeted */
+body:has(dialog:target) {
+  background: #fff;
 }
 
 dialog:target {
@@ -132,8 +127,9 @@ main nav {
 }
 
 main nav a {
-  border-top: 5px solid;
+  border-bottom: 5px solid;
   color: #fff;
+  text-decoration: none;
 }
 
 main nav a em {
@@ -187,9 +183,34 @@ main nav a:hover {
 }
 
 .navbar {
-  border-top: 5px solid;
+  border-bottom: 5px solid;
   padding-left: 0;
-  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.navbar h2 small {
+  display: block;
+  font-family: "Helvetica", sans-serif;
+  font-size: 1rem;
+  text-transform: none;
+  font-weight: normal;
+}
+
+/* Events */
+.event {
+  margin-bottom: 16px;
+}
+
+h5 { display: flex; }
+h5 em { margin-left: auto; }
+
+.event-details {
+  border-top: 3px solid;
+  padding-top: 8px;
+}
+
+.event-line {
+  border-bottom: 1px solid;
 }
 
 .bubbles {

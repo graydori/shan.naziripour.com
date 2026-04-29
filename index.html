@@ -12,11 +12,11 @@
   <link rel="manifest" href="site.webmanifest">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Knewave&family=Concert+One&family=Work+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Knewave&family=Concert+One&display=swap" rel="stylesheet">
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
   <!-- CSS -->
-  <link href="css/site.css?_t=20260429" rel="stylesheet" type="text/css" />
+  <link href="css/site.css?_t=202604292" rel="stylesheet" type="text/css" />
   <!-- Full Story -->
   <script>
     window['_fs_debug'] = false;
@@ -48,7 +48,10 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">About</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">
+              About
+              <small>Developer, Designer, Doodler</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -64,7 +67,7 @@
           </div>
           <div class="col-md">
             <p>The <i>web</i> is where I love to work and grow. Every day is exciting, with an opportunity for growth.</p>
-            <h3 class="h5">Got a cool Project?</h3>
+            <h3>Got a <i>Cool</i> Project?</h3>
             <p>I'm always interested in hearing new, neat projects. I'd love to help.</p>
             <p>
               <a class="btn btn-primary" href="mailto:shan@naziripour.com">Email Me</a>
@@ -83,15 +86,18 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Shows with Shan</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">
+              Shows with Shan
+              <small>Live Improv</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
           </nav>
         </div>
       </div>
-      <div id="calendarEvents" style="flex-grow:1; padding-left: 16px;">
-        <p>Loading events...</p>
+      <div id="calendarEvents">
+        <p>Loading shows...</p>
       </div>
       <div><i>Subscribe to the <a href="https://calendar.google.com/calendar/u/0?cid=N2RlOTlmOWMzNTYwYzhjOTg5YmI1MTNkNWJjZTNiNWRhZGQyMjEzMDI0NWE4ZmQ4Yzc3YjAyZmY3MTBiNDI3NUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t" target="_blank" rel="noopener noreferrer">show calendar</a></i></div>
     </dialog>
@@ -100,7 +106,10 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Art</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">
+              Art
+              <small>Cartoons, Drawings, and Doodles</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -171,7 +180,10 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Dev</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">
+              Dev
+              <small>Software, Games, and Experiments</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -376,7 +388,10 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Resume</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">
+              Resume
+              <small>My work experience and projects</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -395,7 +410,10 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Acting Resume</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">
+              Acting Resume
+              <small>My experience in acting and improv</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -414,7 +432,9 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Give</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">Give
+              <small>How I'm trying to give back</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -466,7 +486,9 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar col">
-            <h2 class="navbar-brand mb-0 mr-auto">Frequently Asked Questions</h2>
+            <h2 class="navbar-brand mb-0 mr-auto">Frequently Asked Questions
+              <small>Answers to questions I get asked a lot</small>
+            </h2>
             <a href="#" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </a>
@@ -705,7 +727,7 @@
 
     function displayCalendarEvents(events) {
       const container = document.getElementById('calendarEvents');
-      let html = '<div style="padding: 0;">';
+      let html = '<div>';
       
       events.forEach(event => {
         const startTime = new Date(event.start.dateTime || event.start.date);
@@ -714,12 +736,12 @@
         const descriptionHtml = convertLinksToClickable(event.description || '');
         
         html += `
-          <div style="margin-bottom: 16px;">
-            <h5>${summary}</h5>
-            <div style="border-top: 3px solid; padding-top: 8px;"></div>
-              📆 ${startTime.toLocaleDateString()} @ ${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-              <div style="color: #6c757d;">📍 ${location}</div>
-              <div>${descriptionHtml}</div>
+          <div class="event" >
+            <h5>${summary}<em>${startTime.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</em></h5>
+            <div class="event-details">
+              <div class="event-line">📆 ${startTime.toLocaleDateString([], { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</div>
+              <div class="event-line">📍 ${location}</div>
+              <div class="event-line">${descriptionHtml}</div>
             </div>
           </div>
         `;
