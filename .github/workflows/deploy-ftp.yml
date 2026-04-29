@@ -15,12 +15,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to SFTP
-        uses: milanmk/actions-file-deployer@1.18
+        uses: pressidium/lftp-mirror-action@v1
         with:
-          remote-host: ${{ secrets.SFTP_SERVER }}
-          remote-user: ${{ secrets.SFTP_USERNAME }}
-          remote-password: ${{ secrets.SFTP_PASSWORD }}
-          local-path: "./"
-          remote-path: "/home/graydori/shan.naziripour.com/"
-          sync: "full"
-          debug: true
+          host: ${{ secrets.SFTP_SERVER }}
+          user: ${{ secrets.SFTP_USERNAME }}
+          pass: ${{ secrets.SFTP_PASSWORD }}
+          # lftp settings
+          settings: 'sftp:auto-confirm=yes'
+          # Mirror command options
+          localDir: '.'
+          remoteDir: '/home/graydori/shan.naziripour.com'
+          options: '--verbose'
