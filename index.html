@@ -707,6 +707,11 @@
 
     function convertLinksToClickable(text) {
       if (!text) return '';
+
+      // Skip if there are already HTML tags in the text to avoid breaking existing formatting
+      if (/<[a-z][\s\S]*>/i.test(text)) {
+        return text;
+      }
       
       // Regex to find URLs
       const urlRegex = /(https?:\/\/[^\s]+)/g;
