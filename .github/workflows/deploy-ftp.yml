@@ -13,6 +13,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Prepare deploy files
+        run: |
+          mkdir -p .deploy
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.deploy/' \
+            --exclude='img/art/Valentine.mp4' \
+            --exclude='img/art/Standup.1.mp4' \
+            ./ .deploy/
       - name: Deploy to SFTP
         uses: AbleLincoln/push-to-sftp@v1.0
         with:
@@ -20,5 +30,5 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          sourceDir: "."
+          sourceDir: ".deploy"
           targetDir: "shan.naziripour.com"
