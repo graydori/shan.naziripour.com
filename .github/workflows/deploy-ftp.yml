@@ -20,8 +20,6 @@ jobs:
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.deploy/' \
-            --exclude='img/art/Valentine.mp4' \
-            --exclude='img/art/Standup.1.mp4' \
             ./ .deploy/
       - name: Deploy to SFTP
         uses: AbleLincoln/push-to-sftp@v1.0
