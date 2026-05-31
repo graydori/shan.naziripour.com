@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversation Cards</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #171717;
+        --muted: #676767;
+        --paper: #fbfaf7;
+        --surface: #ffffff;
+        --line: #dedbd3;
+        --rose: #b95f62;
+        --shadow: 0 18px 60px rgba(23, 23, 23, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: 16px;
+        top: 12px;
+        z-index: 2;
+        background: var(--ink);
+        color: var(--surface);
+        border-radius: 8px;
+        padding: 8px 12px;
+        transform: translateY(-160%);
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: clamp(24px, 5vw, 56px) 0;
+      }
+
+      .hero {
+        max-width: 760px;
+        padding-bottom: 28px;
+      }
+
+      .menu-kicker,
+      .course h3 {
+        margin: 0 0 8px;
+        color: var(--rose);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1,
+      h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        line-height: 0.95;
+      }
+
+      h1 {
+        max-width: 720px;
+        margin-bottom: 14px;
+        font-size: clamp(46px, 10vw, 106px);
+      }
+
+      .intro,
+      .menu-meta {
+        color: var(--muted);
+      }
+
+      .intro {
+        max-width: 620px;
+        margin-bottom: 0;
+        font-size: clamp(17px, 2.4vw, 22px);
+      }
+
+      .topic-nav {
+        margin-bottom: 28px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .topic-nav h2 {
+        margin-bottom: 14px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .topic-nav ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .topic-nav a {
+        min-height: 58px;
+        display: grid;
+        grid-template-columns: 12px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        text-decoration: none;
+        transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+      }
+
+      .topic-nav a::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--topic-color, var(--rose));
+      }
+
+      .topic-nav a:hover,
+      .topic-nav a:focus-visible {
+        border-color: var(--topic-color, var(--rose));
+        outline: none;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 30px rgba(23, 23, 23, 0.06);
+      }
+
+      .topic-title,
+      .topic-count {
+        display: block;
+      }
+
+      .topic-title {
+        font-weight: 750;
+      }
+
+      .topic-count {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .menus {
+        display: grid;
+        gap: 24px;
+      }
+
+      .menu-card {
+        display: none;
+        scroll-margin-top: 18px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        overflow: clip;
+      }
+
+      .menu-card:target,
+      .menus:not(:has(.menu-card:target)) .menu-card:first-child {
+        display: block;
+      }
+
+      .menu-card:target {
+        border-color: color-mix(in srgb, var(--accent) 60%, var(--line));
+        box-shadow: 0 20px 70px color-mix(in srgb, var(--accent) 18%, transparent);
+      }
+
+      .menu-header {
+        padding: clamp(24px, 5vw, 46px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .menu-kicker,
+      .course h3 {
+        color: var(--accent, var(--rose));
+      }
+
+      .menu-card h2 {
+        margin-bottom: 12px;
+        font-size: clamp(40px, 9vw, 96px);
+      }
+
+      .menu-meta {
+        margin-bottom: 0;
+      }
+
+      .courses {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        background: var(--line);
+      }
+
+      .course {
+        min-width: 0;
+        background: var(--surface);
+        padding: clamp(20px, 3vw, 32px);
+      }
+
+      .questions {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding-left: 1.25rem;
+      }
+
+      .questions li {
+        padding-left: 2px;
+      }
+
+      .questions li::marker {
+        color: var(--accent, var(--rose));
+        font-weight: 800;
+      }
+
+      .top-link {
+        margin: 0;
+        padding: 18px clamp(24px, 5vw, 46px);
+        border-top: 1px solid var(--line);
+      }
+
+      .top-link a {
+        color: var(--accent, var(--rose));
+        font-weight: 750;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+      }
+
+      @media (max-width: 820px) {
+        .courses {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 20px, 1120px);
+        }
+
+        .topic-nav {
+          padding: 12px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        .topic-nav a {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#topics">Skip to topics</a>
+    <main class="shell">
+      <header class="hero">
+        <h1>Conversation Menus</h1>
+        <p class="intro">Choose a topic, then use the starter, main course, and dessert prompts as a conversation menu.</p>
+      </header>
+
+      <nav class="topic-nav" id="topics" aria-labelledby="topics-title">
+        <h2 id="topics-title">Topics</h2>
+        <ul>
+          <li>
+            <a href="#the-body" style="--topic-color: #b95f62">
+              <span class="topic-title">The Body</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#taboos" style="--topic-color: #9a6b46">
+              <span class="topic-title">Taboos</span>
+              <span class="topic-count">13 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#death" style="--topic-color: #516f8d">
+              <span class="topic-title">Death</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#resolutions" style="--topic-color: #5f7668">
+              <span class="topic-title">Resolutions</span>
+              <span class="topic-count">14 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#the-meaning-of-life" style="--topic-color: #b28a4c">
+              <span class="topic-title">The Meaning of Life</span>
+              <span class="topic-count">14 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#utopia" style="--topic-color: #6f658d">
+              <span class="topic-title">Utopia</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#school" style="--topic-color: #4e7c7a">
+              <span class="topic-title">School</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#travel" style="--topic-color: #4f6f9f">
+              <span class="topic-title">Travel</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#children" style="--topic-color: #9c7440">
+              <span class="topic-title">Children</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#friendship" style="--topic-color: #657d55">
+              <span class="topic-title">Friendship</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#money" style="--topic-color: #8b7a38">
+              <span class="topic-title">Money</span>
+              <span class="topic-count">13 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#culture" style="--topic-color: #a45f73">
+              <span class="topic-title">Culture</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#work" style="--topic-color: #52758d">
+              <span class="topic-title">Work</span>
+              <span class="topic-count">13 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#confessions" style="--topic-color: #9b5b4e">
+              <span class="topic-title">Confessions</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#hope" style="--topic-color: #65845f">
+              <span class="topic-title">Hope</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#family" style="--topic-color: #a17855">
+              <span class="topic-title">Family</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#secrets" style="--topic-color: #7d607d">
+              <span class="topic-title">Secrets</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#self-knowledge" style="--topic-color: #4c7770">
+              <span class="topic-title">Self-Knowledge</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#love" style="--topic-color: #bd6662">
+              <span class="topic-title">Love</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#ambition" style="--topic-color: #8a7541">
+              <span class="topic-title">Ambition</span>
+              <span class="topic-count">12 prompts</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="menus">
+      <article class="menu-card" id="the-body" style="--accent: #b95f62" aria-labelledby="the-body-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="the-body-title">The Body</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="the-body-starter">
+            <h3 id="the-body-starter">Starter</h3>
+            <ol class="questions">
+              <li>What about your body is desirable?</li>
+              <li>In what ways has your physical appearance affected your personality?</li>
+              <li>If you could redesign your body from scratch, what would it look like?</li>
+              <li>When you look in the mirror, what's the first thing you check?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="the-body-main-course">
+            <h3 id="the-body-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What do you find physically attractive in others?</li>
+              <li>Give the person you are talking to a sincere compliment about their physical appearance.</li>
+              <li>What repels you in other bodies?</li>
+              <li>What clothes interest/excite you for yourself or others?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="the-body-dessert">
+            <h3 id="the-body-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What elements of physically ageing are you most afraid of, or upset by?</li>
+              <li>What might be the upsides of ageing?</li>
+              <li>How have you been ageing recently? What do you notice?</li>
+              <li>At the current rate, what might you regret on your deathbed?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="taboos" style="--accent: #9a6b46" aria-labelledby="taboos-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="taboos-title">Taboos</h2>
+          <p class="menu-meta">13 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="taboos-starter">
+            <h3 id="taboos-starter">Starter</h3>
+            <ol class="questions">
+              <li>Are you dominant or submissive sexually? And in the rest of life?</li>
+              <li>Have you ever had an incestuous thought? Who was it about?</li>
+              <li>Name three sexual scenarios that especially excite you.</li>
+              <li>What experience do you have of impotence - yours or a lover's or a friend's?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="taboos-main-course">
+            <h3 id="taboos-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>How much money do you have in your bank account?</li>
+              <li>What would be the first thing you would do if you won the lottery?</li>
+              <li>What do you, perhaps secretly, spend really quite a lot of money on?</li>
+              <li>Which of your acquaintances/friends/family members makes you feel inadequate around money?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="taboos-dessert">
+            <h3 id="taboos-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>When was the last time you experienced Schadenfreude?</li>
+              <li>Do you dare to admit what triggered it?</li>
+              <li>When have you acted without 100% integrity?</li>
+              <li>Have you ever sabotaged your own success?</li>
+              <li>Which close relative do you like the least - and why?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="death" style="--accent: #516f8d" aria-labelledby="death-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="death-title">Death</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="death-starter">
+            <h3 id="death-starter">Starter</h3>
+            <ol class="questions">
+              <li>What would you ideally like to tell someone you once knew, who is now dead?</li>
+              <li>What must you remember to tell someone before they die?</li>
+              <li>Who are you afraid of not feeling the 'right' things around when they die?</li>
+              <li>Whose death would you find almost impossible to get over?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="death-main-course">
+            <h3 id="death-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What part of your body do you suspect is going to let you down fatally in the end?</li>
+              <li>What do you still need to do before you die?</li>
+              <li>How many summers do you guess you have left?</li>
+              <li>Imagine giving an address at the funeral of someone around the table: what would you say?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="death-dessert">
+            <h3 id="death-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>How would you like to be remembered?</li>
+              <li>What is liberating in the idea of death? What might it be a relief from?</li>
+              <li>Knowing we are all dying (at varying speeds), what honest, direct thing would you like to tell your companions at this point? Make a short speech if necessary.</li>
+              <li>What would you like the idea of death to liberate you from?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="resolutions" style="--accent: #5f7668" aria-labelledby="resolutions-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="resolutions-title">Resolutions</h2>
+          <p class="menu-meta">14 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="resolutions-starter">
+            <h3 id="resolutions-starter">Starter</h3>
+            <ol class="questions">
+              <li>What immature side of yourself (we all have them) would you like to work on?</li>
+              <li>Describe one thing you would do in the coming 12 months if you were a more confident person.</li>
+              <li>If you could not fail, what would be the ideal next move in your career?</li>
+              <li>Who are you envious of? What positive bit of their life can you introduce into your own?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="resolutions-main-course">
+            <h3 id="resolutions-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>Describe your life in the most upbeat, optimistic way. Then in the darkest, most honest, most pessimistic way.</li>
+              <li>How did your parents shape what success and failure mean to you?</li>
+              <li>What old ambition can you happily let go, knowing you will never achieve it?</li>
+              <li>What can you forgive yourself for?</li>
+              <li>What could you forgive another person you know for?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="resolutions-dessert">
+            <h3 id="resolutions-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>Who in your life can you draw supportive energy from to realise an ambition?</li>
+              <li>And who drains your energy - who might you have to let go?</li>
+              <li>What small evolutionary steps - a daily practice or good habit - could you undertake to realise an ambition?</li>
+              <li>If this was the last year of your life, how would your resolution change?</li>
+              <li>How do you hope your life will look different as a result of a resolution - in a year's time?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="the-meaning-of-life" style="--accent: #b28a4c" aria-labelledby="the-meaning-of-life-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="the-meaning-of-life-title">The Meaning of Life</h2>
+          <p class="menu-meta">14 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="the-meaning-of-life-starter">
+            <h3 id="the-meaning-of-life-starter">Starter</h3>
+            <ol class="questions">
+              <li>What problem would you like to solve for other people?</li>
+              <li>Describe two meaningful moments you have had in your life.</li>
+              <li>What is a meaningful conversation in your eyes?</li>
+              <li>How has your quest for a meaningful life made relationships and your career more purposeful but more difficult for you?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="the-meaning-of-life-main-course">
+            <h3 id="the-meaning-of-life-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>Imagine you have five years left to live. Assume you won't be incapacitated until the moment of death. What would you have the confidence to do - now that your death verdict has been announced - that you might previously not have dared?</li>
+              <li>In my relationships, I would have the confidence to...</li>
+              <li>In my friendships, I would have the confidence to...</li>
+              <li>In my work, I would have the confidence to...</li>
+              <li>With my family, I would have the confidence to...</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="the-meaning-of-life-dessert">
+            <h3 id="the-meaning-of-life-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What's the greatest unhappiness in your inter-personal life at the moment?</li>
+              <li>What transcendent experiences have you had? Where were you? What did they feel like?</li>
+              <li>What sort of group could you imagine belonging to?</li>
+              <li>What would it need to be like for you to feel proud to belong?</li>
+              <li>What advice would you give to your 19-year old self? How have you grown since then?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="utopia" style="--accent: #6f658d" aria-labelledby="utopia-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="utopia-title">Utopia</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="utopia-starter">
+            <h3 id="utopia-starter">Starter</h3>
+            <ol class="questions">
+              <li>In a better society, what would people be like?</li>
+              <li>In what ways would you like to be a better person?</li>
+              <li>If you had magical powers to 'improve' people around you, what would you correct in them?</li>
+              <li>What do you allow yourself to be idealistic about?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="utopia-main-course">
+            <h3 id="utopia-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>Design your ideal country: how would it be different from your real one?</li>
+              <li>In your utopia, what would be banned?</li>
+              <li>In your utopia, who or what would be more readily forgiven?</li>
+              <li>In the utopia, everyone would try out four very different careers in a working life. What would you pick?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="utopia-dessert">
+            <h3 id="utopia-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>In your utopia, who would deserve to be treated as a celebrity?</li>
+              <li>In the utopia, schools teach their students not just formal knowledge, but the emotional skills they need to thrive. What subject or lesson could you teach?</li>
+              <li>In the utopia, advertising does not promote useless things, but virtues and good causes. What would you like to advertise?</li>
+              <li>What can you do to make the world a slightly better place?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="school" style="--accent: #4e7c7a" aria-labelledby="school-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="school-title">School</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="school-starter">
+            <h3 id="school-starter">Starter</h3>
+            <ol class="questions">
+              <li>What's it taken you a bit too long to learn about yourself?</li>
+              <li>What would you want to teach your younger self about life?</li>
+              <li>Name a psychological area in which you are improving as a person.</li>
+              <li>If you had the patience and opportunity, what would you ideally want to teach a family member about life?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="school-main-course">
+            <h3 id="school-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>How did you suffer at school?</li>
+              <li>What was, in a way, fun at school?</li>
+              <li>Who did you have a crush on during your school years?</li>
+              <li>Who did you dislike at school? Why - with hindsight - do you think that was?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="school-dessert">
+            <h3 id="school-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>In your ideal school, what would people be taught?</li>
+              <li>What would you, ideally, want to teach people about love?</li>
+              <li>What should young people learn about the world of work?</li>
+              <li>How would you like to be a wiser person going forward?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="travel" style="--accent: #4f6f9f" aria-labelledby="travel-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="travel-title">Travel</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="travel-starter">
+            <h3 id="travel-starter">Starter</h3>
+            <ol class="questions">
+              <li>Describe your first memorable encounter with another culture.</li>
+              <li>What, for you, counts as 'exotic'?</li>
+              <li>In what ways are you not a good traveller?</li>
+              <li>What supposedly interesting destinations do you have no interest in seeing, and why might this be?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="travel-main-course">
+            <h3 id="travel-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>With a citizen from what country (other than your own) could you imagine having a fulfilling relationship? What might you learn?</li>
+              <li>Describe, in some detail, your ideal hotel.</li>
+              <li>What do you still want to discover in the world?</li>
+              <li>What occupation or role would you be well suited to if you could travel back in time to another era?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="travel-dessert">
+            <h3 id="travel-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>Describe an ideal travelling companion.</li>
+              <li>What sides of you does your own country not understand/enhance/reflect?</li>
+              <li>When you say you are interested in 'other cultures', what bits specifically interest you?</li>
+              <li>What images/sensations/moments of trips have stayed with you? Be precise and evocative.</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="children" style="--accent: #9c7440" aria-labelledby="children-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="children-title">Children</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="children-starter">
+            <h3 id="children-starter">Starter</h3>
+            <ol class="questions">
+              <li>What is the point, if any, of having a child?</li>
+              <li>In so far as you find children endearing, what is it that moves you about them?</li>
+              <li>In what ways are children a disappointment?</li>
+              <li>How do children spoil the relationships of their parents? And enhance them?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="children-main-course">
+            <h3 id="children-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>Describe an ideal (not perfect, just ideal for you) child, in your eyes, according to your values.</li>
+              <li>What mistakes do you feel many parents make?</li>
+              <li>What should children learn about the adult world?</li>
+              <li>How might you (inadvertently) mess up your children?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="children-dessert">
+            <h3 id="children-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What might a child find ridiculous about you?</li>
+              <li>What might a child find endearing/charming about you?</li>
+              <li>Where do you lose your temper with children - and why might this be?</li>
+              <li>What have you ever learnt from a child?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="friendship" style="--accent: #657d55" aria-labelledby="friendship-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="friendship-title">Friendship</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="friendship-starter">
+            <h3 id="friendship-starter">Starter</h3>
+            <ol class="questions">
+              <li>What sides of you still feel lonely?</li>
+              <li>Describe an ideal, imaginary friend.</li>
+              <li>What frustrates you about social life?</li>
+              <li>What would help to turn a stranger into a friend?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="friendship-main-course">
+            <h3 id="friendship-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>When you are made anxious by being in company, what are you anxious about?</li>
+              <li>What do you want your friends to 'get' about you?</li>
+              <li>What enables you to 'connect' well with someone?</li>
+              <li>Who have you had to eject from your social life - and why?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="friendship-dessert">
+            <h3 id="friendship-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What would you want to admit to a true good friend?</li>
+              <li>What would you want to laugh about with a true good friend?</li>
+              <li>'Every time a friend of mine succeeds, a small part of me dies,' said Gore Vidal. What does this make you think of in your life?</li>
+              <li>Tell a companion at table something vulnerable and revealing which opens a door to deeper friendship.</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="money" style="--accent: #8b7a38" aria-labelledby="money-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="money-title">Money</h2>
+          <p class="menu-meta">13 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="money-starter">
+            <h3 id="money-starter">Starter</h3>
+            <ol class="questions">
+              <li>What feels like enough money for someone to have a year?</li>
+              <li>What is a noble way to make money?</li>
+              <li>In what ways are you somewhat irrational around money?</li>
+              <li>What are you ashamed of around money?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="money-main-course">
+            <h3 id="money-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>How might money corrupt you?</li>
+              <li>What would you do with unlimited funds?</li>
+              <li>What sides of your character have stopped you from making more money?</li>
+              <li>What suspicions do you have of the very rich? And the very poor?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="money-dessert">
+            <h3 id="money-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What would you want to teach a child about money?</li>
+              <li>What shaped your attitudes to money?</li>
+              <li>What role has money played in your relationships?</li>
+              <li>How, in your mind, are money and sex connected?</li>
+              <li>Why are both often highly taboo?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="culture" style="--accent: #a45f73" aria-labelledby="culture-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="culture-title">Culture</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="culture-starter">
+            <h3 id="culture-starter">Starter</h3>
+            <ol class="questions">
+              <li>What would you like a book to explain to you?</li>
+              <li>If you were to write a book, what might it be like, and what would it be about?</li>
+              <li>If someone were to make a film of (bits of) your life, what might be key elements of the plot?</li>
+              <li>What has shaped your taste in interior decoration?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="culture-main-course">
+            <h3 id="culture-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>In what areas do you feel you might have 'bad taste'?</li>
+              <li>What supposedly great art is not for you?</li>
+              <li>In what ways, and when, have you been dishonest about your cultural tastes?</li>
+              <li>What kind of tastes in art would an ideal lover have?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="culture-dessert">
+            <h3 id="culture-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>Shared embarrassment brings people closer: hum one of your favourite songs to a dinner companion. Listen to them do likewise.</li>
+              <li>Write the first sentence to an imaginary book which you'd want to keep reading thereafter.</li>
+              <li>If you were a great visual artist, what elements would you want to bring out in a painting or drawing of a dinner companion?</li>
+              <li>With a companion, sketch the plot of a thriller you could write together: what might happen in it?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="work" style="--accent: #52758d" aria-labelledby="work-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="work-title">Work</h2>
+          <p class="menu-meta">13 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="work-starter">
+            <h3 id="work-starter">Starter</h3>
+            <ol class="questions">
+              <li>If I was more of a success, a/my partner would...</li>
+              <li>If I was more of a failure, a/my partner would...</li>
+              <li>Men secretly feel that successful women are...</li>
+              <li>Women secretly feel that successful men are...</li>
+              <li>Could you respect a partner who earned far less than you?</li>
+              <li>How would you feel if your partner earned far more than you?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="work-main-course">
+            <h3 id="work-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What is the most cynical thing you could say about your work?</li>
+              <li>In what ways is your organisation (a bit) dysfunctional?</li>
+              <li>Ideally, my colleagues would be more like me. Discuss.</li>
+              <li>The best person I ever worked for/with was so good because...</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="work-dessert">
+            <h3 id="work-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>When I was a child and thought about the future, I wanted to be...</li>
+              <li>If life were 400 years long, what careers would you want to have had?</li>
+              <li>Having shared so much I now worry that you think I...</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="confessions" style="--accent: #9b5b4e" aria-labelledby="confessions-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="confessions-title">Confessions</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="confessions-starter">
+            <h3 id="confessions-starter">Starter</h3>
+            <ol class="questions">
+              <li>Which of your exes would you like to go back and sleep with?</li>
+              <li>What do you wish your partner could forgive you for?</li>
+              <li>How has your childhood made you difficult to be around?</li>
+              <li>What mistakes would you want to avoid in a future relationship?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="confessions-main-course">
+            <h3 id="confessions-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>Describe your discovery of masturbation.</li>
+              <li>What hang-ups do you have around sex?</li>
+              <li>What part of your body do you worry might put a lover off?</li>
+              <li>What do you want more of in your sex life - but have difficulty asking for or finding?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="confessions-dessert">
+            <h3 id="confessions-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>How much do you earn?</li>
+              <li>What would you fix in your life if you had infinite money?</li>
+              <li>What salary level for another person starts to make you feel humiliated at your earnings?</li>
+              <li>What is it about your character that hasn't enabled you to make more money?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="hope" style="--accent: #65845f" aria-labelledby="hope-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="hope-title">Hope</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="hope-starter">
+            <h3 id="hope-starter">Starter</h3>
+            <ol class="questions">
+              <li>What's the kindest thing anyone's done for you?</li>
+              <li>Describe an important teacher in your life - outside school.</li>
+              <li>Name something nice that happened to you today.</li>
+              <li>What small everyday pleasure do you love?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="hope-main-course">
+            <h3 id="hope-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What is the most significant difference you feel you have made in the life of any individual?</li>
+              <li>Who has most influenced you in relation to wanting to make a difference? Tell us one person who you personally know, and one who is famous or historical.</li>
+              <li>What would you change as the absolute ruler of the world?</li>
+              <li>What small political change do you think you could help with?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="hope-dessert">
+            <h3 id="hope-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>Misery likes company: what sad sides of yourself would you like to share, if you could find fellow-sufferers?</li>
+              <li>What do you feel sad or anxious about on Sunday evenings?</li>
+              <li>What message should the hopeful you more regularly impart to the despairing you?</li>
+              <li>What do you remain hopeful about?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="family" style="--accent: #a17855" aria-labelledby="family-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="family-title">Family</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="family-starter">
+            <h3 id="family-starter">Starter</h3>
+            <ol class="questions">
+              <li>What do you blame your parents for?</li>
+              <li>What do you credit your parents for?</li>
+              <li>What might a good friend of your parents say about their inadequacies?</li>
+              <li>What did you learn about relationships from your parents? What have you tried to unlearn?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="family-main-course">
+            <h3 id="family-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What was once rather sweet about you?</li>
+              <li>What qualities did you possess as a child that you wish you still had more of as an adult?</li>
+              <li>Have you ever had an imaginary friend or very favourite soft toy? Describe them.</li>
+              <li>What were you especially embarrassed about as a teenager?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="family-dessert">
+            <h3 id="family-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>If you had to join someone else's family, what sort would it be? (Design the ideal one.)</li>
+              <li>In what ways are you envious of your siblings? (If you do not have siblings, choose other relations of your own generation.)</li>
+              <li>Of the family you spend time with, who brings out your best qualities?</li>
+              <li>What three things do you enjoy doing most as a family? And least?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="secrets" style="--accent: #7d607d" aria-labelledby="secrets-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="secrets-title">Secrets</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="secrets-starter">
+            <h3 id="secrets-starter">Starter</h3>
+            <ol class="questions">
+              <li>Tell your dinner companion a big secret about yourself.</li>
+              <li>How do you secretly hope a friend would describe you at your funeral? Be as specific to your individual character as possible.</li>
+              <li>What's the worst thing you've ever done? Name the general area if the specifics are too tricky.</li>
+              <li>What negative character flaws do you fear - in your worst nightmares - that other people have spotted in you?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="secrets-main-course">
+            <h3 id="secrets-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>List three things about a person close to you that secretly annoy you (like humming, doing the wrong thing in the bathroom, being late...).</li>
+              <li>What sort of things have made you envious recently?</li>
+              <li>List three (now guilt-inducing) occasions when you were especially mean to certain people.</li>
+              <li>What things would alarm your family if they knew?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="secrets-dessert">
+            <h3 id="secrets-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What are some of your most pervasive insecurities?</li>
+              <li>What do you worry about in the early hours?</li>
+              <li>What do you think is quite odd about you?</li>
+              <li>Which of your flaws would you want to be forgiven?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="self-knowledge" style="--accent: #4c7770" aria-labelledby="self-knowledge-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="self-knowledge-title">Self-Knowledge</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="self-knowledge-starter">
+            <h3 id="self-knowledge-starter">Starter</h3>
+            <ol class="questions">
+              <li>How much do you like yourself? What do you attribute this to?</li>
+              <li>In what ways are you neurotic (given that we all are)?</li>
+              <li>What difficulties did your childhood bequeath you?</li>
+              <li>How might people describe you when you are not in the room?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="self-knowledge-main-course">
+            <h3 id="self-knowledge-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What do you find it difficult to communicate directly?</li>
+              <li>In what contexts do you find it hard to trust people?</li>
+              <li>What do you characteristically do when you are emotionally hurt?</li>
+              <li>In what areas of life would you describe yourself as immature?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="self-knowledge-dessert">
+            <h3 id="self-knowledge-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>How did your mother leave you feeling about yourself? And your father?</li>
+              <li>How do you typically respond to frustration?</li>
+              <li>What do you think explains why you are personally more of an introvert - or an extrovert?</li>
+              <li>How would you still like to grow emotionally?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="love" style="--accent: #bd6662" aria-labelledby="love-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="love-title">Love</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="love-starter">
+            <h3 id="love-starter">Starter</h3>
+            <ol class="questions">
+              <li>Finish this sentence: If someone likes me a lot, I start to feel...</li>
+              <li>Think about people you are attracted to. In what ways are they similar to one or other of your parents?</li>
+              <li>On a date, what would you most want to be liked for?</li>
+              <li>What kinds of suffering would you want a prospective partner to have experienced in the past?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="love-main-course">
+            <h3 id="love-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>In what way is your partner (or an ex) quite annoying?</li>
+              <li>List five ways in which you are, after all, quite difficult to live with.</li>
+              <li>In what ways are you not a great communicator?</li>
+              <li>What's tricky about sex?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="love-dessert">
+            <h3 id="love-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>Are you good at breaking up?</li>
+              <li>Which of your ex-partners hurt you the most?</li>
+              <li>Make a case for why adultery could, sometimes, be excused.</li>
+              <li>Which of your flaws would you like to be treated more generously?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+
+      <article class="menu-card" id="ambition" style="--accent: #8a7541" aria-labelledby="ambition-title">
+        <header class="menu-header">
+          <p class="menu-kicker">Conversation Menu</p>
+          <h2 id="ambition-title">Ambition</h2>
+          <p class="menu-meta">12 prompts across starter, main course, and dessert.</p>
+        </header>
+        <div class="courses">
+
+          <section class="course" aria-labelledby="ambition-starter">
+            <h3 id="ambition-starter">Starter</h3>
+            <ol class="questions">
+              <li>Were your parents fulfilled in their own ambitions?</li>
+              <li>What were your parents' ambitions for you?</li>
+              <li>What remains for you to achieve?</li>
+              <li>Who would you like to impress?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="ambition-main-course">
+            <h3 id="ambition-main-course">Main Course</h3>
+            <ol class="questions">
+              <li>What achievements of others make you jealous?</li>
+              <li>What personal vulnerabilities and flaws have held you back in your ambitions?</li>
+              <li>What, for you, is the relationship between lovability and achievement?</li>
+              <li>What is failure for you?</li>
+            </ol>
+          </section>
+
+          <section class="course" aria-labelledby="ambition-dessert">
+            <h3 id="ambition-dessert">Dessert</h3>
+            <ol class="questions">
+              <li>What alternative careers do you suspect you might be rather good at?</li>
+              <li>What price have you paid for your ambitions?</li>
+              <li>What is the best way to cope with the disapproval or neglect of the world?</li>
+              <li>Knowing what you now know, what would you advise a very young person about their ambitions?</li>
+            </ol>
+          </section>
+        </div>
+        <p class="top-link"><a href="#topics">Back to topics</a></p>
+      </article>
+      </div>
+    </main>
+  </body>
+</html>
