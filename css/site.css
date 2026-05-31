@@ -159,6 +159,9 @@ main nav a[href="#shows"] em::after {
 main nav a[href="#dev"] em::after {
   content: "👾";
 }
+main nav a[href="#lab"] em::after {
+  content: "🧪";
+}
 main nav a[href="#give"] em::after {
   content: "🙏🏽";
 }
